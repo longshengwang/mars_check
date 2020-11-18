@@ -40,12 +40,16 @@ if __name__ == '__main__':
     # print UseStyle('aaa', fore='red') + "dddd"
     run()
 
-    mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
-    # snap = SnapData(mars_config)
-    # snap.snap_all_data()
-    from functions.pre_check import PreCheck
-    prechekc = PreCheck(mars_config)
-    prechekc.check()
+    # mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
+    # # snap = SnapData(mars_config)
+    # # snap.snap_all_data()
+    # from functions.pre_check import PreCheck
+    # prechekc = PreCheck(mars_config)
+    # prechekc.check()
+
+    a = [1, 23,21]
+    a.sort()
+    print a
 
 
 

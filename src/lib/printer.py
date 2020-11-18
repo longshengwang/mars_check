@@ -6,5 +6,5 @@ def print_warn(word):
 
 
 def print_normal(word):
-    print '[ ' + UseStyle('MARS', fore='green')+' ]' + word
+    print '[ ' + UseStyle('MARS', fore='green')+' ] ' + word
 

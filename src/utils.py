@@ -14,7 +14,7 @@ def get(url, auth):
 
 def flow_to_line_string(flow, host_object, device_config_object):
     end = ' ; '
-    res = '[ FLOW ] state=>PENDING; Device=>'
+    res = '[ FLOW ] state=>' + flow['state'] + '; Device=>'
     device_id = flow['deviceId']
     device_name = device_config_object.get_device_name(device_id)
     if device_name is None:

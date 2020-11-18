@@ -23,7 +23,7 @@ class DeviceConfigs(Resource):
             if device['id'] == device_id:
                 return device['name']
 
-        return None
+        return device_id
 
     def get_data(self):
         return self.devices_config
