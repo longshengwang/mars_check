@@ -5,29 +5,48 @@ import argparse
 from os.path import expanduser
 
 from config import MarsConfig
+from functions.compare import ResourceCompare
 from functions.pre_check import PreCheck
 from functions.snap_data import SnapData
+from lib.command_selector import CommandSelector
 
 DEFAULT_CONFIG_PATH = '/.mars_check/'
 MAX_BACKUP_COUNT = 20
 
+mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
+
 
 def snap(args):
-    mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
     snap = SnapData(mars_config)
     snap.snap_all_data()
 
 
 def compare(args):
-    print args.flow
-    print args.all
-    print args.host
-    print args.group
-    print 'compare'
+    resource_compare = ResourceCompare(mars_config)
+    snap_times = resource_compare.get_all_snap_time()
+    cmd_selector = CommandSelector(snap_times, 'Please select two time to compare.', 2)
+    selectors = cmd_selector.get_selector()
+    if selectors is None:
+        return
+
+    resource_compare.load(selectors)
+
+    if args.flow:
+        # resource_compare.compare_flow()
+        pass
+    elif args.group:
+        pass
+    elif args.host:
+        pass
+    elif args.link:
+        pass
+    elif args.all:
+        pass
+    else:
+        pass
 
 
 def pre_check(args):
-    mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
     pre_check = PreCheck(mars_config)
     pre_check.check()
 
@@ -84,33 +103,21 @@ def init_config_dir():
 
 
 if __name__ == '__main__':
+    mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
+    cmp = ResourceCompare(mars_config)
+
+    cmp.get_all_snap_time()
+
+
+
+
     # run()
-    # -*- coding:utf8 -*-
-    import time, sys
 
+    # i = 0
+    # l = ['2010-12-31 12:52:30.000','2010-12-31 03:15:30.000', '2010-12-31 22:22:30.000']
+    # cmd_selector = CommandSelector(l, 'Please select two time to compare.', 2)
+    # selectors = cmd_selector.get_selector()
+    # if selectors is not None:
+    #     print 'Now compare the value \n    ' + selectors[0] + '\n    ' + selectors[1]
 
-    def progressbar():
-        print 'Loading...'
-        print "[+] start to build...."
-        height = 4
-        for i in range(0, 100):
-            if i > 0:
-                sys.stdout.write(u'\u001b[1A')
-            time.sleep(0.1)
-            width = (i + 1) / 4
-            bar = '[' + '#' * width + ' ' * (25 - width) + ']'
-            sys.stdout.write(u'\u001b[1000D\u001b[2K' + ' | -> ' + bar + '\n')
-            sys.stdout.write(u'\u001b[1000D\u001b[2K' + ' | -> ' + bar)
-            sys.stdout.flush()
-
-        sys.stdout.write(u'\u001b[1A')
-        sys.stdout.write(u'\u001b[1A')
-        sys.stdout.write(u'\u001b[1000D')
-        sys.stdout.write(u'\u001b[J')
-        sys.stdout.write('[-] Finish build')
-        sys.stdout.flush()
-        print
-
-
-    progressbar()
 
