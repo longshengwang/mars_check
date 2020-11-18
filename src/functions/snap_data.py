@@ -1,10 +1,8 @@
 # -*- coding:utf8 -*-
 
 import time
-import devices
-import flows
-import hosts
 import os
+from resource import Devices, DeviceConfigs, Flows, Groups, Hosts, Links
 
 
 class SnapData:
@@ -15,11 +13,12 @@ class SnapData:
 
     def snap_all_data(self):
         print 'Going to snap all the data from ' + self.mars_config.get_url()
-        device_object = devices.Devices.initialize(self.mars_config)
-        device_config_object = devices.DeviceConfigs.initialize(self.mars_config)
-        host_object = hosts.Hosts.initialize(self.mars_config)
-        flow_object = flows.Flows.initialize(self.mars_config)
-        group_object = flows.Groups.initialize(self.mars_config)
+        device_object = Devices.initialize(self.mars_config)
+        device_config_object = DeviceConfigs.initialize(self.mars_config)
+        host_object = Hosts.initialize(self.mars_config)
+        flow_object = Flows.initialize(self.mars_config)
+        group_object = Groups.initialize(self.mars_config)
+        link_object = Links.initialize(self.mars_config)
 
         t = int(time.time())
 
@@ -31,5 +30,6 @@ class SnapData:
         host_object.save(data_path)
         flow_object.save(data_path)
         group_object.save(data_path)
+        link_object.save(data_path)
 
         print 'Success to snap the data'

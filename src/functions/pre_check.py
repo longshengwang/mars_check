@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import devices
-import flows
-import hosts
+from resource import Devices, DeviceConfigs, Flows, Groups, Hosts
 from lib.printer import print_warn, print_normal
 from utils import flow_to_line_string, group_to_line_string
 
@@ -19,10 +17,10 @@ class PreCheck:
         self.mars_config = mars_config
 
     def _get_data(self):
-        self.device_config_object = devices.DeviceConfigs.initialize(self.mars_config)
-        self.flow_object = flows.Flows.initialize(self.mars_config)
-        self.group_object = flows.Groups.initialize(self.mars_config)
-        self.host_object = hosts.Hosts.initialize(self.mars_config)
+        self.device_config_object = DeviceConfigs.initialize(self.mars_config)
+        self.flow_object = Flows.initialize(self.mars_config)
+        self.group_object = Groups.initialize(self.mars_config)
+        self.host_object = Hosts.initialize(self.mars_config)
 
     def _check_if_contains_pending_flow(self):
         print_normal("1. Start to check if contains pending flow.")
