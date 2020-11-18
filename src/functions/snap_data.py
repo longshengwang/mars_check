@@ -3,6 +3,7 @@
 import time
 import os
 from resource import Devices, DeviceConfigs, Flows, Groups, Hosts, Links
+from lib.printer import print_normal
 
 
 class SnapData:
@@ -12,7 +13,7 @@ class SnapData:
         self.mars_config = mars_config
 
     def snap_all_data(self):
-        print 'Going to snap all the data from ' + self.mars_config.get_url()
+        print_normal('Going to snap all the data from ' + self.mars_config.get_url())
         device_object = Devices.initialize(self.mars_config)
         device_config_object = DeviceConfigs.initialize(self.mars_config)
         host_object = Hosts.initialize(self.mars_config)
@@ -32,4 +33,4 @@ class SnapData:
         group_object.save(data_path)
         link_object.save(data_path)
 
-        print 'Success to snap the data'
+        print_normal('Success to snap the data')

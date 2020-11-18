@@ -84,29 +84,33 @@ def init_config_dir():
 
 
 if __name__ == '__main__':
-    # import sys
-    # sys.path.append("..")
-    # a = {}
-    # from lib.color import UseStyle
-    # import json
-    #
-    #
-    #
-    #
-    # a['a'] = "\u001b[31mdddd\u001b[0m"
-    #
-    # # a[UseStyle('ad','red')] = 'dddd'
-    # d = json.dumps(a)
-    # print type(d)
-    # r = UseStyle('a', fore='red')
-    # d = d.replace("a", r)
-    # print d
-    # print UseStyle('aaa', fore='red') + "dddd"
-    run()
+    # run()
+    # -*- coding:utf8 -*-
+    import time, sys
 
-    # mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
-    # snap = SnapData(mars_config)
-    # snap.snap_all_data()
-    # from functions.pre_check import PreCheck
-    # prechekc = PreCheck(mars_config)
-    # prechekc.check()
+
+    def progressbar():
+        print 'Loading...'
+        print "[+] start to build...."
+        height = 4
+        for i in range(0, 100):
+            if i > 0:
+                sys.stdout.write(u'\u001b[1A')
+            time.sleep(0.1)
+            width = (i + 1) / 4
+            bar = '[' + '#' * width + ' ' * (25 - width) + ']'
+            sys.stdout.write(u'\u001b[1000D\u001b[2K' + ' | -> ' + bar + '\n')
+            sys.stdout.write(u'\u001b[1000D\u001b[2K' + ' | -> ' + bar)
+            sys.stdout.flush()
+
+        sys.stdout.write(u'\u001b[1A')
+        sys.stdout.write(u'\u001b[1A')
+        sys.stdout.write(u'\u001b[1000D')
+        sys.stdout.write(u'\u001b[J')
+        sys.stdout.write('[-] Finish build')
+        sys.stdout.flush()
+        print
+
+
+    progressbar()
+
