@@ -28,8 +28,17 @@ class DeviceConfigs(Resource):
     def get_data(self):
         return self.devices_config
 
+    def set_data(self, configs):
+        self.devices_config = configs
+
     @classmethod
     def initialize(cls, mars_config):
         c = cls(mars_config)
         c.init_all_devices()
+        return c
+
+    @classmethod
+    def initialize_with(cls, mars_config, configs):
+        c = cls(mars_config)
+        c.set_data(configs)
         return c

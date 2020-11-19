@@ -36,6 +36,9 @@ class Hosts(Resource):
                     return ','.join(ip_addr)
         return None
 
+    def set_data(self, hosts):
+        self.hosts = hosts
+
     @property
     def uni_key(self):
         return 'id'
@@ -48,4 +51,10 @@ class Hosts(Resource):
     def initialize(cls, mars_config):
         c = cls(mars_config)
         c.init_all_hosts()
+        return c
+
+    @classmethod
+    def initialize_with(cls, mars_config, hosts):
+        c = cls(mars_config)
+        c.set_data(hosts)
         return c

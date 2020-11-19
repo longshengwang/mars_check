@@ -37,7 +37,6 @@ class PreCheck:
         # if is_print_header:
         #     print_warn('<==== FOUND pending flows')
 
-        print_normal("End check.")
 
     def _check_if_contains_pending_group(self):
         print_normal("2. Start to check if contains pending group.")
@@ -53,7 +52,6 @@ class PreCheck:
         if is_print_header:
             print_warn('<==== FOUND pending groups')
 
-        print_normal("End check.")
 
     # core flow
     def _check_default_flow(self):
@@ -88,7 +86,6 @@ class PreCheck:
                 for item in device_flow_dict[device_id]:
                     print_warn(flow_to_line_string(item, self.host_object, self.device_config_object))
 
-        print_normal("End check.")
 
     def check(self):
         print_normal('Going to check all the data.')

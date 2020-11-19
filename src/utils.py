@@ -4,6 +4,7 @@ from requests.auth import HTTPBasicAuth
 from constants import ETH_TYPE_CODE
 import re
 import json
+import time
 
 
 def get(url, auth):
@@ -91,7 +92,7 @@ def flow_to_line_string(flow, host_object, device_config_object):
 
 def group_to_line_string(group, device_config_object):
     end = ' ; '
-    res = '[ GROUP ] GroupId=>' + hex(int(group['id'])) +'; state=>PENDING; Device=>'
+    res = '[ GROUP ] GroupId=>' + hex(int(group['id'])) + '; state=>' + group['state'] + '; Device=>'
     device_id = group['deviceId']
     device_name = device_config_object.get_device_name(device_id)
     if device_name is None:
@@ -131,5 +132,29 @@ def group_to_line_string(group, device_config_object):
     return res
 
 
+def host_to_line_string(host, device_config_obj):
+    host_location_list = []
+    for location in host['locations']:
+        host_location_list.append(
+            device_config_obj.get_device_name(location['elementId']) + '/' + location['port'])
+
+    res = '[ HOST ] MAC: ' + host['mac'] + '; LOCATION: ' + ','.join(host_location_list) + '; '
+
+    if 'lastUpdateTime' in host:
+        res = res + 'LAST_UPDATE: ' + format_time_stamp_2_string(host['lastUpdateTime']) + '; '
+
+    if host['ipAddresses'] is not None and len(host['ipAddresses']) > 0:
+        res = res + 'IP_ADDRESS:' + ','.join(host['ipAddresses']) + '; '
+
+    return res
+
+
 def remove_last_word(word):
     return word[0:-1]
+
+
+def format_time_stamp_2_string(time_stamp_str, is_mill=True):
+    time_stamp = int(time_stamp_str)
+    if is_mill:
+        time_stamp = time_stamp / 1000
+    return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_stamp))

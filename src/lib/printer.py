@@ -10,3 +10,18 @@ def print_warn(word):
 def print_normal(word):
     print '[ ' + UseStyle('MARS', fore='green')+' ] ' + word
 
+
+def print_normal_start(word, color=None):
+    print '[ ' + UseStyle('MARS', fore='green')+' ] ---- ' + word if color is None else UseStyle(word, fore=color)
+
+
+def print_normal_sub(word, color=None):
+    print '[ ' + UseStyle('MARS', fore='green')+' ] |' + (word if color is None else UseStyle(word, fore=color))
+
+def print_normal_center(word, color=None):
+    print '[ ' + UseStyle('MARS', fore='green')+' ] |  ' + (word if color is None else UseStyle(word, fore=color))
+
+
+def print_normal_end(word, color=None):
+    print '[ ' + UseStyle('MARS', fore='green')+' ] ---- ' + word if color is None else UseStyle(word, fore=color)
+
