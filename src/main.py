@@ -250,8 +250,9 @@ def run():
     # group.add_argument('--compare', action='store_true', help='Compare the different time data.')
 
     sub_parsers = parser.add_subparsers()
-    device_args = sub_parsers.add_parser('devices', help='Show all the devices info.')
-    device_args.set_defaults(func=show_devices)
+
+    # device_args = sub_parsers.add_parser('devices', help='Show all the devices info.')
+    # device_args.set_defaults(func=show_devices)
 
     config_args = sub_parsers.add_parser('config', help='Set the mars url/user/password.')
     config_args.add_argument('-u', '--user', help='The mars user name.')
