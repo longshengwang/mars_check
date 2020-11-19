@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
+import re
+import time
+
 import requests
 from requests.auth import HTTPBasicAuth
+
 from constants import ETH_TYPE_CODE
-import re
-import json
-import time
 
 
 def get(url, auth):
@@ -146,6 +147,17 @@ def host_to_line_string(host, device_config_obj):
     if host['ipAddresses'] is not None and len(host['ipAddresses']) > 0:
         res = res + 'IP_ADDRESS:' + ','.join(host['ipAddresses']) + '; '
 
+    return res
+
+
+def link_to_line_string(link, device_config_obj):
+    src = link['src']
+    dst = link['dst']
+
+    one = device_config_obj.get_device_name(src['device']) + '/' + src['port']
+    two = device_config_obj.get_device_name(dst['device']) + '/' + dst['port']
+
+    res = '[ LINK ] ' + one + ' <==> ' + two + '; TYPE: ' + link['type'] + '; STATE: ' + link['state'] + ';'
     return res
 
 

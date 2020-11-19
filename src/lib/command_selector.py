@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
-import tty, termios
+import termios
+import tty
 
 from lib.color import UseStyle
 

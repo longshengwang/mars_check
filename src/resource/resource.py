@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
 
+import json
+
 import requests
 from requests.auth import HTTPBasicAuth
-import json
 
 
 class Resource:

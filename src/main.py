@@ -1,31 +1,89 @@
 # -*- coding:utf-8 -*-
 
-import os
 import argparse
+import os
 from os.path import expanduser
 
 from config import MarsConfig
 from functions.compare import ResourceCompare
+from functions.compare import compare_flows, compare_groups, compare_hosts, compare_link
 from functions.pre_check import PreCheck
 from functions.snap_data import SnapData
-from lib.command_selector import CommandSelector
-from functions.compare import compare_flows, compare_groups, compare_hosts, compare_link
-from utils import flow_to_line_string, group_to_line_string, host_to_line_string
-from lib.printer import print_normal, print_warn, print_normal_center, print_normal_end, print_normal_start
 from lib.color import UseStyle
+from lib.command_selector import CommandSelector
+from lib.printer import print_normal, print_normal_center, print_normal_end, print_normal_start, \
+    print_normal_sub
+from utils import flow_to_line_string, group_to_line_string, host_to_line_string, link_to_line_string
 
-DEFAULT_CONFIG_PATH = '/.mars_check/'
+DEFAULT_CONFIG_PATH = expanduser("~") + '/.mars_check/'
 MAX_BACKUP_COUNT = 20
 
-mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
+URL_CONFIG_FILE = '.url'
+USER_CONFIG_FILE = '.user'
+PASSWORD_CONFIG_FILE = '.password'
+
+
+def read_config(path):
+    f = open(path)
+    line = f.readline()
+    f.close()
+    return line.rstrip()
+
+
+def write_config(path, content):
+    f = open(path, 'w+')
+    f.write(content)
+    f.close()
+
+
+def get_mars_config():
+    files = os.listdir(DEFAULT_CONFIG_PATH)
+    url = 'https://127.0.0.1'
+    user = 'karaf'
+    password = 'karaf'
+    if URL_CONFIG_FILE in files:
+        res = read_config(DEFAULT_CONFIG_PATH + URL_CONFIG_FILE)
+        if res != '':
+            url = res
+
+    if USER_CONFIG_FILE in files:
+        res = read_config(DEFAULT_CONFIG_PATH + USER_CONFIG_FILE)
+        if res != '':
+            user = res
+
+    if PASSWORD_CONFIG_FILE in files:
+        res = read_config(DEFAULT_CONFIG_PATH + PASSWORD_CONFIG_FILE)
+        if res != '':
+            password = res
+    return MarsConfig(url, user, password, DEFAULT_CONFIG_PATH)
+
+
+def config(args):
+    if args.user is not None:
+        write_config(DEFAULT_CONFIG_PATH + USER_CONFIG_FILE, args.user)
+
+    if args.password is not None:
+        write_config(DEFAULT_CONFIG_PATH + PASSWORD_CONFIG_FILE, args.password)
+
+    if args.url is not None:
+        write_config(DEFAULT_CONFIG_PATH + URL_CONFIG_FILE, args.url)
 
 
 def snap(args):
+    mars_config = get_mars_config()
     snap = SnapData(mars_config)
+    if args.list:
+        resource_compare = ResourceCompare(mars_config)
+        snap_times = resource_compare.get_all_snap_time()
+        for item in snap_times:
+            print item
+        return
+
     snap.snap_all_data()
 
 
 def compare(args):
+    mars_config = get_mars_config()
     resource_compare = ResourceCompare(mars_config)
     snap_times = resource_compare.get_all_snap_time()
     cmd_selector = CommandSelector(snap_times, 'Please select two time to compare.', 2)
@@ -55,16 +113,20 @@ def compare(args):
             print_normal(UseStyle('Device Name: ' + device_name, fore='yellow'))
             # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Added', fore='yellow'))
             print_normal_start('')
-            print_normal_center('=> Added')
+            print_normal_sub('--- Added')
             changes_json = res[key]
             if len(changes_json['added']) > 0:
                 for item in changes_json['added']:
-                    print_normal_center(flow_to_line_string(item, resource_compare.host_object, resource_compare.device_config_object), 'green')
+                    print_normal_center(
+                        flow_to_line_string(item, resource_compare.host_object, resource_compare.device_config_object),
+                        'green')
 
-            print_normal_center('=> Removed')
+            print_normal_sub('--- Removed')
             if changes_json['removed'] and len(changes_json['removed']) > 0:
                 for item in changes_json['removed']:
-                    print_normal_center(flow_to_line_string(item, resource_compare.host_object, resource_compare.device_config_object), 'red')
+                    print_normal_center(
+                        flow_to_line_string(item, resource_compare.host_object, resource_compare.device_config_object),
+                        'red')
 
             print_normal_end('')
             print_normal('')
@@ -81,49 +143,67 @@ def compare(args):
             print_normal(UseStyle('Device Name: ' + device_name, fore='yellow'))
             # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Added', fore='yellow'))
             print_normal_start('')
-            print_normal_center('=> Added')
+            print_normal_sub('--- Added')
             changes_json = res[key]
             if len(changes_json['added']) > 0:
                 for item in changes_json['added']:
                     print_normal_center(group_to_line_string(item, resource_compare.device_config_object), 'green')
 
             # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Removed', fore='yellow'))
-            print_normal_center('=> Removed')
+            print_normal_sub('--- Removed')
             if changes_json['removed'] and len(changes_json['removed']) > 0:
                 for item in changes_json['removed']:
                     print_normal_center(group_to_line_string(item, resource_compare.device_config_object), 'red')
             print_normal_end('')
             print_normal('')
     elif args.host:
-        print_normal('====  Host COMPARE ====')
+        print_normal('====  HOST COMPARE ====')
         before_host = resource_compare.get_host(before_time)
         after_host = resource_compare.get_host(after_time)
         res = compare_hosts(before_host, after_host, resource_compare.device_config_object)
 
         print_normal_start('')
-        print_normal_center('--- Added')
+        print_normal_sub('--- Added')
         if len(res['added']) > 0:
             for item in res['added']:
                 print_normal_center(host_to_line_string(item, resource_compare.device_config_object), 'green')
 
         # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Removed', fore='yellow'))
-        print_normal_center('--- Removed')
+        print_normal_sub('--- Removed')
         if res['removed'] and len(res['removed']) > 0:
             for item in res['removed']:
                 print_normal_center(host_to_line_string(item, resource_compare.device_config_object), 'red')
 
-        print_normal_center('--- Modified')
+        print_normal_sub('--- Modified')
         if res['modified'] and len(res['modified']) > 0:
             for item in res['modified']:
                 print_normal_center(str(item), 'cyan')
         print_normal_end('')
         print_normal('')
     elif args.link:
-        pass
+        print_normal('====  LINK COMPARE ====')
+        before_link = resource_compare.get_link(before_time)
+        after_link = resource_compare.get_link(after_time)
+        res = compare_link(before_link, after_link)
+        #  resource_compare.device_config_object)
 
+        print_normal_start('')
+        print_normal_sub('--- Added')
+        if len(res['added']) > 0:
+            for item in res['added']:
+                print_normal_center(link_to_line_string(item, resource_compare.device_config_object), 'green')
+
+        # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Removed', fore='yellow'))
+        print_normal_sub('--- Removed')
+        if res['removed'] and len(res['removed']) > 0:
+            for item in res['removed']:
+                print_normal_center(link_to_line_string(item, resource_compare.device_config_object), 'red')
+        print_normal_end('')
+        print_normal('')
 
 
 def pre_check(args):
+    mars_config = get_mars_config()
     pre_check = PreCheck(mars_config)
     pre_check.check()
 
@@ -152,7 +232,16 @@ def run():
     sub_parsers = parser.add_subparsers()
     device_args = sub_parsers.add_parser('devices', help='Show all the devices info.')
     device_args.set_defaults(func=show_devices)
+
+    config_args = sub_parsers.add_parser('config', help='Set the mars url/user/password.')
+    config_args.add_argument('-u', '--user', help='The mars user name.')
+    config_args.add_argument('-p', '--password', help='The mars password.')
+    config_args.add_argument('--url', help='The mars host url.(Example: https://192.168.1.20)')
+    config_args.set_defaults(func=config)
+
     snap_args = sub_parsers.add_parser('snap', help='Save the data of now.')
+    snap_group = snap_args.add_mutually_exclusive_group()
+    snap_group.add_argument('-l', '--list', action='store_true', help='List all the snap data.')
     snap_args.set_defaults(func=snap)
 
     check_args = sub_parsers.add_parser('check', help='Check the flow/group data if correct.')
@@ -165,7 +254,6 @@ def run():
     group.add_argument('-f', '--flow', action='store_true', help='Only compare flow data.')
     group.add_argument('-g', '--group', action='store_const', const='all', help='Only compare group data.')
     group.add_argument('-ho', '--host', action='store_true', help='Only compare host data.')
-    # group.add_argument('-a', '--all', action='store_true', help='Compare all data.')
     compare_args.set_defaults(func=compare)
 
     # argcomplete.autocomplete(parser)
@@ -174,32 +262,9 @@ def run():
 
 
 def init_config_dir():
-    home = expanduser("~")
-    if not os.path.exists(home + DEFAULT_CONFIG_PATH):
-        os.mkdir(home + DEFAULT_CONFIG_PATH)
+    if not os.path.exists(DEFAULT_CONFIG_PATH):
+        os.mkdir(DEFAULT_CONFIG_PATH)
 
 
 if __name__ == '__main__':
-    # mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
-    # cmp = ResourceCompare(mars_config)
-    #
-
-    # cmp.get_all_snap_time()
-
     run()
-    #
-    # path = '/home/wls/.mars_check/1605694695/flows'
-    # f = open(path, 'r')
-    # lines = f.readlines()
-    # ss = ''.join(lines)
-    #
-    # import json
-    # obj = json.loads(ss)
-    # print obj
-
-    # i = 0
-    # l = ['2010-12-31 12:52:30.000','2010-12-31 03:15:30.000', '2010-12-31 22:22:30.000']
-    # cmd_selector = CommandSelector(l, 'Please select two time to compare.', 2)
-    # selectors = cmd_selector.get_selector()
-    # if selectors is not None:
-    #     print 'Now compare the value \n    ' + selectors[0] + '\n    ' + selectors[1]

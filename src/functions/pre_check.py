@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from resource import Devices, DeviceConfigs, Flows, Groups, Hosts
 from lib.printer import print_warn, print_normal
+from resource import DeviceConfigs, Flows, Groups, Hosts
 from utils import flow_to_line_string, group_to_line_string
 
 CORE_DEFAULT_FLOW_SIZE = 4

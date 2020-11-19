@@ -1,9 +1,10 @@
 # -*- coding:utf-8 -*-
 
-import time
 import os
-from resource import Devices, DeviceConfigs, Flows, Groups, Hosts, Links
+import time
+
 from lib.printer import print_normal
+from resource import Devices, DeviceConfigs, Flows, Groups, Hosts, Links
 
 
 class SnapData:

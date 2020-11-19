@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
-import os
 import json
+import os
 import time
+
 from resource import DeviceConfigs, Hosts
 from utils import format_time_stamp_2_string
 
@@ -70,6 +71,10 @@ class ResourceCompare:
     def get_group(self, snap_time):
         group_str = self._get_data_from_snap(snap_time, 'groups')
         return json.loads(group_str)
+
+    def get_link(self, snap_time):
+        link_str = self._get_data_from_snap(snap_time, 'links')
+        return json.loads(link_str)
 
     def get_host(self, snap_time):
         host_str = self._get_data_from_snap(snap_time, 'hosts')
@@ -187,7 +192,7 @@ def compare_groups(before_groups, after_groups, device_id_4_compare=None):
 
 
 def compare_link(before_links, after_links):
-    res = {'new': [], 'removed': []}
+    res = {'added': [], 'removed': []}
     before_links_dict = {}
     for item in before_links:
         link_id = _get_link_id(item)
@@ -199,7 +204,7 @@ def compare_link(before_links, after_links):
         if a_link_id in before_links_dict:
             del before_links_dict[a_link_id]
         else:
-            res['new'].append(item)
+            res['added'].append(item)
 
     for item in before_links_dict.values():
         res['removed'].append(item)
