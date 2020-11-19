@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
-
+from constants import FLOW_NAME
 from resource import Resource
 
 
 class Flows(Resource):
-    name = 'flows'
+    name = FLOW_NAME
     flows = {}
     mars_config = None
     url = "/mars/v1/flows"

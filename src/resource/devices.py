@@ -1,9 +1,10 @@
 # -*- coding:utf-8 -*-
+from constants import DEVICE_NAME
 from resource import Resource
 
 
 class Devices(Resource):
-    name = 'devices'
+    name = DEVICE_NAME
 
     devices = {}
     mars_config = None

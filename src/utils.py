@@ -1,11 +1,13 @@
 # -*- coding:utf-8 -*-
 import re
 import time
+import json
 
 import requests
 from requests.auth import HTTPBasicAuth
 
-from constants import ETH_TYPE_CODE
+from constants import ETH_TYPE_CODE, DEVICE_CONFIG_NAME, DEVICE_NAME, FLOW_NAME, GROUPS_NAME, \
+    HOSTS_NAME, LINKS_NAME
 
 
 def get(url, auth):
@@ -170,3 +172,47 @@ def format_time_stamp_2_string(time_stamp_str, is_mill=True):
     if is_mill:
         time_stamp = time_stamp / 1000
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_stamp))
+
+
+def get_flow(mars_config, snap_time):
+    flow_str = _get_data_from_snap(mars_config, snap_time, FLOW_NAME)
+    return json.loads(flow_str)
+
+
+def get_devices(mars_config, snap_time):
+    devices_str = _get_data_from_snap(mars_config, snap_time, DEVICE_NAME)
+    return json.loads(devices_str)
+
+
+def get_devices_configs(mars_config, snap_time):
+    devices_config_str = _get_data_from_snap(mars_config, snap_time, DEVICE_CONFIG_NAME)
+    return json.loads(devices_config_str)
+
+
+def get_group(mars_config, snap_time):
+    group_str = _get_data_from_snap(mars_config, snap_time, GROUPS_NAME)
+    return json.loads(group_str)
+
+
+def get_link(mars_config, snap_time):
+    link_str = _get_data_from_snap(mars_config, snap_time, LINKS_NAME)
+    return json.loads(link_str)
+
+
+def get_host(mars_config, snap_time):
+    host_str = _get_data_from_snap(mars_config, snap_time, HOSTS_NAME)
+    return json.loads(host_str)
+
+
+def _get_data_from_snap(mars_config, snap_time, words):
+    path_dir = mars_config.get_base_path()
+    file_path = path_dir + snap_time + '/' + words
+    f = open(file_path, 'r')
+    lines = f.readlines()
+    data_str = ''.join(lines)
+    f.close()
+    return data_str
+
+
+def fix_string_to_size(word, n):
+    return (n - len(word)) * ' ' + word

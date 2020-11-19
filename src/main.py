@@ -14,6 +14,9 @@ from lib.command_selector import CommandSelector
 from lib.printer import print_normal, print_normal_center, print_normal_end, print_normal_start, \
     print_normal_sub
 from utils import flow_to_line_string, group_to_line_string, host_to_line_string, link_to_line_string
+from utils import get_flow, get_group, get_host, get_link
+from utils import fix_string_to_size
+from constants import DEVICE_NAME, DEVICE_CONFIG_NAME, LINKS_NAME, HOSTS_NAME, FLOW_NAME, GROUPS_NAME
 
 DEFAULT_CONFIG_PATH = expanduser("~") + '/.mars_check/'
 MAX_BACKUP_COUNT = 20
@@ -71,15 +74,32 @@ def config(args):
 
 def snap(args):
     mars_config = get_mars_config()
-    snap = SnapData(mars_config)
+    snap_obj = SnapData(mars_config)
     if args.list:
         resource_compare = ResourceCompare(mars_config)
         snap_times = resource_compare.get_all_snap_time()
         for item in snap_times:
             print item
-        return
+    elif args.get:
+        snap_obj.snap_all_data()
+    elif args.summary:
+        for item in snap_obj.get_summary():
+            res = item['time'] + UseStyle(' | ', fore='red')
+            word_len = 4
 
-    snap.snap_all_data()
+            res = res + FLOW_NAME + ':' + fix_string_to_size(str(item[FLOW_NAME]), word_len) \
+                  + UseStyle(' | ', fore='red')
+            res = res + GROUPS_NAME + ':' + fix_string_to_size(str(item[GROUPS_NAME]), word_len) \
+                  + UseStyle(' | ', fore='red')
+            res = res + DEVICE_NAME + ':' + fix_string_to_size(str(item[DEVICE_NAME]), word_len) \
+                  + UseStyle(' | ', fore='red')
+            res = res + DEVICE_CONFIG_NAME + ':' + fix_string_to_size(str(item[DEVICE_CONFIG_NAME]), word_len) \
+                  + UseStyle(' | ', fore='red')
+            res = res + HOSTS_NAME + ':' + fix_string_to_size(str(item[HOSTS_NAME]), word_len) \
+                  + UseStyle(' | ', fore='red')
+            res = res + LINKS_NAME + ':' + fix_string_to_size(str(item[LINKS_NAME]), word_len)
+
+            print res
 
 
 def compare(args):
@@ -102,8 +122,8 @@ def compare(args):
     if args.flow:
         print_normal('====  FLOWS COMPARE ====')
         # resource_compare.compare_flow()
-        before_flow = resource_compare.get_flow(before_time)
-        after_flow = resource_compare.get_flow(after_time)
+        before_flow = get_flow(mars_config, before_time)
+        after_flow = get_flow(mars_config, after_time)
         res = compare_flows(before_flow, after_flow)
         keys = res.keys()
         for key in keys:
@@ -132,8 +152,8 @@ def compare(args):
             print_normal('')
     elif args.group:
         print_normal('====  GROUPS COMPARE ====')
-        before_group = resource_compare.get_group(before_time)
-        after_group = resource_compare.get_group(after_time)
+        before_group = get_group(mars_config, before_time)
+        after_group = get_group(mars_config, after_time)
         res = compare_groups(before_group, after_group)
         keys = res.keys()
         for key in keys:
@@ -158,8 +178,8 @@ def compare(args):
             print_normal('')
     elif args.host:
         print_normal('====  HOST COMPARE ====')
-        before_host = resource_compare.get_host(before_time)
-        after_host = resource_compare.get_host(after_time)
+        before_host = get_host(mars_config, before_time)
+        after_host = get_host(mars_config, after_time)
         res = compare_hosts(before_host, after_host, resource_compare.device_config_object)
 
         print_normal_start('')
@@ -182,8 +202,8 @@ def compare(args):
         print_normal('')
     elif args.link:
         print_normal('====  LINK COMPARE ====')
-        before_link = resource_compare.get_link(before_time)
-        after_link = resource_compare.get_link(after_time)
+        before_link = get_link(mars_config, before_time)
+        after_link = get_link(mars_config, after_time)
         res = compare_link(before_link, after_link)
         #  resource_compare.device_config_object)
 
@@ -242,6 +262,8 @@ def run():
     snap_args = sub_parsers.add_parser('snap', help='Save the data of now.')
     snap_group = snap_args.add_mutually_exclusive_group()
     snap_group.add_argument('-l', '--list', action='store_true', help='List all the snap data.')
+    snap_group.add_argument('-g', '--get', action='store_true', help='Snap all the data.')
+    snap_group.add_argument('-s', '--summary', action='store_true', help='Show the summary of all times.')
     snap_args.set_defaults(func=snap)
 
     check_args = sub_parsers.add_parser('check', help='Check the flow/group data if correct.')

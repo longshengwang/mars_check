@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 
 from resource import Resource
+from constants import DEVICE_CONFIG_NAME
 
 
 class DeviceConfigs(Resource):
-
-    name = 'devices_config'
+    name = DEVICE_CONFIG_NAME
 
     devices_config = {}
 

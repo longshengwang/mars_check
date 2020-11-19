@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
+from constants import GROUPS_NAME
 
 from resource import Resource
 
 
 class Groups(Resource):
-    name = 'groups'
+    name = GROUPS_NAME
 
     groups = {}
     mars_config = None

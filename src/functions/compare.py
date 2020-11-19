@@ -64,31 +64,6 @@ class ResourceCompare:
 
         return str(before_time), str(after_time)
 
-    def get_flow(self, snap_time):
-        flow_str = self._get_data_from_snap(snap_time, 'flows')
-        return json.loads(flow_str)
-
-    def get_group(self, snap_time):
-        group_str = self._get_data_from_snap(snap_time, 'groups')
-        return json.loads(group_str)
-
-    def get_link(self, snap_time):
-        link_str = self._get_data_from_snap(snap_time, 'links')
-        return json.loads(link_str)
-
-    def get_host(self, snap_time):
-        host_str = self._get_data_from_snap(snap_time, 'hosts')
-        return json.loads(host_str)
-
-    def _get_data_from_snap(self, snap_time, words):
-        path_dir = self.mars_config.get_base_path()
-        file_path = path_dir + snap_time + '/' + words
-        f = open(file_path, 'r')
-        lines = f.readlines()
-        data_str = ''.join(lines)
-        f.close()
-        return data_str
-
 
 # -----------------------------
 
@@ -266,4 +241,3 @@ def _compare_host(before_host, after_host, device_config_obj):
         return None
 
     return '[ HOST ] Host: ' + before_host['mac'] + '   ' + res
-

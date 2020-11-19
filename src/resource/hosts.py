@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-
+from constants import HOSTS_NAME
 from resource import Resource
 
 
@@ -13,7 +13,7 @@ class Hosts(Resource):
     #           {"id":"90:E2:BA:24:A1:34/None","mac":"90:E2:BA:24:A1:34","vlan":"None","innerVlan":"None","outerTpid":"unknown","configured":false,"ipAddresses":["192.168.10.83"],"locations":[{"elementId":"of:0000b86a97145100","port":"28"}]}
     #       ]
     # }
-    name = 'hosts'
+    name = HOSTS_NAME
     hosts = {}
     mars_config = None
     url = "/mars/v1/hosts"
