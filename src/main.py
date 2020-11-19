@@ -1,4 +1,4 @@
-# -*- coding:utf8 -*-
+# -*- coding:utf-8 -*-
 
 import os
 import argparse
@@ -9,6 +9,7 @@ from functions.compare import ResourceCompare
 from functions.pre_check import PreCheck
 from functions.snap_data import SnapData
 from lib.command_selector import CommandSelector
+from functions.compare import compare_flows
 
 DEFAULT_CONFIG_PATH = '/.mars_check/'
 MAX_BACKUP_COUNT = 20
@@ -29,11 +30,13 @@ def compare(args):
     if selectors is None:
         return
 
-    resource_compare.load(selectors)
+    before_time, after_time = resource_compare.load(selectors)
 
     if args.flow:
         # resource_compare.compare_flow()
-        pass
+        before_flow = resource_compare.get_flow(before_time)
+        after_flow = resource_compare.get_flow(after_time)
+        print compare_flows(before_flow, after_flow)
     elif args.group:
         pass
     elif args.host:
@@ -103,15 +106,21 @@ def init_config_dir():
 
 
 if __name__ == '__main__':
-    mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
-    cmp = ResourceCompare(mars_config)
+    # mars_config = MarsConfig("https://210.63.204.28", 'karaf', 'karaf', expanduser("~") + DEFAULT_CONFIG_PATH)
+    # cmp = ResourceCompare(mars_config)
+    #
 
-    cmp.get_all_snap_time()
-
-
-
+    # cmp.get_all_snap_time()
 
     # run()
+
+    path = '/Users/wls/.mars_check/1605769167/flows'
+    f = open(path, 'r')
+    lines = f.readlines()
+    ss = ''.join(lines)
+    import json
+    obj = json.load(ss)
+    print obj
 
     # i = 0
     # l = ['2010-12-31 12:52:30.000','2010-12-31 03:15:30.000', '2010-12-31 22:22:30.000']

@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import os
+import json
 import time
 
 
@@ -34,6 +35,21 @@ class ResourceCompare:
         parsed_times.sort()
         before_time = parsed_times[0]
         after_time = parsed_times[1]
+        return str(before_time), str(after_time)
+
+    def get_flow(self, snap_time):
+        path_dir = self.mars_config.get_base_path()
+        flow_path = path_dir + snap_time + '/flows'
+        f = open(flow_path, 'r')
+        lines = f.readlines()
+        flows_str = ''.join(lines)
+        print flows_str
+
+        return json.load(flows_str)
+
+
+
+
 
 
 # -----------------------------

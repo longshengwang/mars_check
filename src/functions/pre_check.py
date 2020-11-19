@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from resource import Devices, DeviceConfigs, Flows, Groups, Hosts
 from lib.printer import print_warn, print_normal
 from utils import flow_to_line_string, group_to_line_string
