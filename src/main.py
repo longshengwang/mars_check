@@ -130,18 +130,19 @@ def compare(args):
             device_name = resource_compare.device_config_object.get_device_name(key)
             if args.device is not None and (device_name != args.device and device_name != args.device):
                 continue
+
+            changes_json = res[key]
             print_normal(UseStyle('Device Name: ' + device_name, fore='yellow'))
             # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Added', fore='yellow'))
             print_normal_start('')
-            print_normal_sub('--- Added')
-            changes_json = res[key]
+            print_normal_sub('--- Added(' + str(len(changes_json['added'])) + ')')
             if len(changes_json['added']) > 0:
                 for item in changes_json['added']:
                     print_normal_center(
                         flow_to_line_string(item, resource_compare.host_object, resource_compare.device_config_object),
                         'green')
 
-            print_normal_sub('--- Removed')
+            print_normal_sub('--- Removed(' + str(len(changes_json['removed'])) + ')')
             if changes_json['removed'] and len(changes_json['removed']) > 0:
                 for item in changes_json['removed']:
                     print_normal_center(
@@ -160,17 +161,19 @@ def compare(args):
             device_name = resource_compare.device_config_object.get_device_name(key)
             if args.device is not None and (device_name != args.device and device_name != args.device):
                 continue
+
+            changes_json = res[key]
             print_normal(UseStyle('Device Name: ' + device_name, fore='yellow'))
             # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Added', fore='yellow'))
             print_normal_start('')
-            print_normal_sub('--- Added')
-            changes_json = res[key]
+            print_normal_sub('--- Added(' + str(len(changes_json['added'])) + ')')
+
             if len(changes_json['added']) > 0:
                 for item in changes_json['added']:
                     print_normal_center(group_to_line_string(item, resource_compare.device_config_object), 'green')
 
             # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Removed', fore='yellow'))
-            print_normal_sub('--- Removed')
+            print_normal_sub('--- Removed(' + str(len(changes_json['removed'])) + ')')
             if changes_json['removed'] and len(changes_json['removed']) > 0:
                 for item in changes_json['removed']:
                     print_normal_center(group_to_line_string(item, resource_compare.device_config_object), 'red')
@@ -183,18 +186,18 @@ def compare(args):
         res = compare_hosts(before_host, after_host, resource_compare.device_config_object)
 
         print_normal_start('')
-        print_normal_sub('--- Added')
+        print_normal_sub('--- Added(' + str(len(res['added'])) + ')')
         if len(res['added']) > 0:
             for item in res['added']:
                 print_normal_center(host_to_line_string(item, resource_compare.device_config_object), 'green')
 
         # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Removed', fore='yellow'))
-        print_normal_sub('--- Removed')
+        print_normal_sub('--- Removed(' + str(len(res['removed'])) + ')')
         if res['removed'] and len(res['removed']) > 0:
             for item in res['removed']:
                 print_normal_center(host_to_line_string(item, resource_compare.device_config_object), 'red')
 
-        print_normal_sub('--- Modified')
+        print_normal_sub('--- Modified(' + str(len(res['modified'])) + ')')
         if res['modified'] and len(res['modified']) > 0:
             for item in res['modified']:
                 print_normal_center(str(item), 'cyan')
@@ -208,13 +211,13 @@ def compare(args):
         #  resource_compare.device_config_object)
 
         print_normal_start('')
-        print_normal_sub('--- Added')
+        print_normal_sub('--- Added(' + str(len(res['added'])) + ')')
         if len(res['added']) > 0:
             for item in res['added']:
                 print_normal_center(link_to_line_string(item, resource_compare.device_config_object), 'green')
 
         # print_normal(UseStyle('Device Name: ' + device_name + ' ====> Removed', fore='yellow'))
-        print_normal_sub('--- Removed')
+        print_normal_sub('--- Removed(' + str(len(res['removed'])) + ')')
         if res['removed'] and len(res['removed']) > 0:
             for item in res['removed']:
                 print_normal_center(link_to_line_string(item, resource_compare.device_config_object), 'red')
