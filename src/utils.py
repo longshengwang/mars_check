@@ -2,7 +2,7 @@
 import re
 import time
 import json
-
+import os
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -216,3 +216,20 @@ def _get_data_from_snap(mars_config, snap_time, words):
 
 def fix_string_to_size(word, n):
     return (n - len(word)) * ' ' + word
+
+
+def get_all_snap_time(mars_config):
+    path_dir = mars_config.get_base_path()
+    snap_times_list = os.listdir(path_dir)
+    snap_times_list.sort(reverse=True)
+
+    res = []
+    for snap_time in snap_times_list:
+        try:
+            time_stamp = int(snap_time)
+            time_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_stamp))
+            res.append(time_str)
+        except ValueError, e:
+            pass
+    # print int(time.mktime(time.strptime(time_str, '%Y-%m-%d %H:%M:%S'))) == time_stamp
+    return res

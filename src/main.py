@@ -15,7 +15,7 @@ from lib.printer import print_normal, print_normal_center, print_normal_end, pri
     print_normal_sub
 from utils import flow_to_line_string, group_to_line_string, host_to_line_string, link_to_line_string
 from utils import get_flow, get_group, get_host, get_link
-from utils import fix_string_to_size
+from utils import fix_string_to_size, get_all_snap_time
 from constants import DEVICE_NAME, DEVICE_CONFIG_NAME, LINKS_NAME, HOSTS_NAME, FLOW_NAME, GROUPS_NAME
 
 DEFAULT_CONFIG_PATH = expanduser("~") + '/.mars_check/'
@@ -76,8 +76,7 @@ def snap(args):
     mars_config = get_mars_config()
     snap_obj = SnapData(mars_config)
     if args.list:
-        resource_compare = ResourceCompare(mars_config)
-        snap_times = resource_compare.get_all_snap_time()
+        snap_times = get_all_snap_time(mars_config)
         for item in snap_times:
             print item
     elif args.get:
@@ -100,12 +99,24 @@ def snap(args):
             res = res + LINKS_NAME + ':' + fix_string_to_size(str(item[LINKS_NAME]), word_len)
 
             print res
+    elif args.delete:
+        snap_times = get_all_snap_time(mars_config)
+        cmd_selector = CommandSelector(snap_times, 'Please select times to delete.')
+        selectors = cmd_selector.get_selector()
+        if len(selectors) == 0:
+            print 'No data is selected for delete.'
+            return
+        else:
+            user_input = raw_input('Are you sure to delete the data: ' + ', '.join(selectors) + ' ?(Y/N):')
+            if user_input == 'y' or user_input == 'Y' or user_input == 'yes' or user_input == 'YES':
+                snap_obj.delete(selectors)
+
 
 
 def compare(args):
     mars_config = get_mars_config()
     resource_compare = ResourceCompare(mars_config)
-    snap_times = resource_compare.get_all_snap_time()
+    snap_times = get_all_snap_time(mars_config)
     cmd_selector = CommandSelector(snap_times, 'Please select two time to compare.', 2)
     selectors = cmd_selector.get_selector()
     if selectors is None:
@@ -266,6 +277,7 @@ def run():
     snap_args = sub_parsers.add_parser('snap', help='Save the data of now.')
     snap_group = snap_args.add_mutually_exclusive_group()
     snap_group.add_argument('-l', '--list', action='store_true', help='List all the snap data.')
+    snap_group.add_argument('-d', '--delete', action='store_true', help='Delete the select data.')
     snap_group.add_argument('-g', '--get', action='store_true', help='Snap all the data.')
     snap_group.add_argument('-s', '--summary', action='store_true', help='Show the summary of all times.')
     snap_args.set_defaults(func=snap)

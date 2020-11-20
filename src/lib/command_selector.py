@@ -17,11 +17,11 @@ class CommandSelector:
     selectors = None
     cur_index = 0
     select_index_list = []
-    select_count = 2
+    select_count = None
     cursor_index = 0
     header_word = None
 
-    def __init__(self, selectors, header_word, select_count=2):
+    def __init__(self, selectors, header_word, select_count=None):
         self.selectors = selectors
         self.select_count = select_count
         self.header_word = header_word
@@ -45,8 +45,11 @@ class CommandSelector:
             index = self.select_index_list.index(self.cur_index)
             self.select_index_list.remove(self.cur_index)
         except ValueError, e:
-            if len(self.select_index_list) < self.select_count:
+            if self.select_count is None:
                 self.select_index_list.append(self.cur_index)
+            else:
+                if len(self.select_index_list) < self.select_count:
+                    self.select_index_list.append(self.cur_index)
         self.print_multi_line()
 
     def exit(self):
@@ -110,16 +113,22 @@ class CommandSelector:
             finally:
                 termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
-        if len(self.select_index_list) == self.select_count:
+        if self.select_count is None:
             res = []
             for i in self.select_index_list:
                 res.append(self.selectors[i])
             return res
         else:
-            show_message = 'The selector count is not correct.(Expect is ' + \
-                  str(self.select_count) + ', but only select ' + str(len(self.select_index_list)) + ')'
-            print UseStyle(show_message, fore='red')
-            return None
+            if len(self.select_index_list) == self.select_count:
+                res = []
+                for i in self.select_index_list:
+                    res.append(self.selectors[i])
+                return res
+            else:
+                show_message = 'The selector count is not correct.(Expect is ' + \
+                      str(self.select_count) + ', but only select ' + str(len(self.select_index_list)) + ')'
+                print UseStyle(show_message, fore='red')
+                return None
 
     def print_multi_line(self):
         sys.stdout.write(self.cursor_index * up + left)
