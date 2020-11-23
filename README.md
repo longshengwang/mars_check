@@ -1,5 +1,16 @@
 # Mars Check Command Tools
 
+## local command install
+1. `pip install .`
+2. add `eval "$(register-python-argcomplete mcheck)"` to `.bashrc`
+3. use `mcheck` command at terminal
+> the second step can support tab help
+## update for local command 
+```
+$ pip uninstall mcheck
+$ pip install .
+```
+
 ## 1. config
 - mars url (https://127.0.0.1)
 - user
