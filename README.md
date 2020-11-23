@@ -5,6 +5,12 @@
 2. add `eval "$(register-python-argcomplete mcheck)"` to `.bashrc`
 3. use `mcheck` command at terminal
 > the second step can support tab help
+
+```
+~ mcheck --help
+--help   -h       check    compare  config   log      show     snap
+```
+
 ## update for local command 
 ```
 $ pip uninstall mcheck
