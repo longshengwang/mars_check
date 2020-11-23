@@ -19,7 +19,7 @@ class PreCheck:
         self.mars_config = mars_config
 
     def check_online(self):
-        print_normal('Going to check the >> ' + UseStyle('online', fore='green') + ' << data.')
+        print_normal('Going to check the ' + UseStyle('ONLINE', fore='green', mode='underline') + ' data.')
         self._get_online_data()
         self._check_if_contains_pending_flow()
         self._check_if_contains_pending_group()
@@ -34,7 +34,7 @@ class PreCheck:
 
     def check_snap(self, snap_time):
         snap_time_str = str(int(time.mktime(time.strptime(snap_time, '%Y-%m-%d %H:%M:%S'))))
-        print_normal('Going to check the snap >> ' + UseStyle(snap_time, fore='green') + ' << data.')
+        print_normal('Going to check the snap ' + UseStyle(snap_time, fore='green', mode='underline') + ' data.')
         self._get_snap_data(snap_time_str)
 
         self._check_if_contains_pending_flow()
