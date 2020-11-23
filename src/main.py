@@ -31,7 +31,7 @@ def run():
     config_args.set_defaults(func=cmd_call.config)
 
     # show cmd
-    show_args = sub_parsers.add_parser('show', help='Show the mars resource (Devices/Links).')
+    show_args = sub_parsers.add_parser('show', help='Show the mars resource.(Devices/Links)')
     show_group = show_args.add_mutually_exclusive_group()
 
     show_group.add_argument('-o', '--online', action='store_true', help='Show the online data.')
@@ -80,8 +80,8 @@ def run():
     # log cmd
     log_args = sub_parsers.add_parser('log', help='Show the log with search word.')
     log_args.add_argument('-w', '--word', help='The filter keyword.')
-    log_args.add_argument('-l', '--last_hours', type=int, default=2, help='The last hours.')
-    log_args.add_argument('-c', '--count', type=int, default=1000, help='The log count.')
+    log_args.add_argument('-l', '--last_hours', type=int, default=2, help='The last hours.(Default is 2)')
+    log_args.add_argument('-c', '--count', type=int, default=1000, help='The log count.(Default is 1000)')
     log_args.set_defaults(func=cmd_call.log)
 
     # argcomplete.autocomplete(parser)
