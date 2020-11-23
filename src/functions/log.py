@@ -48,8 +48,11 @@ class Log:
 
         utc_time_word = item.split('|')[0].strip()
 
-        local_time = utc_time_str_2_time_stamp(utc_time_word)
-        time_word = format_time_stamp_2_string(local_time, is_mill=False)
-        time_word_with_mill = time_word + '.' + utc_time_word[-4:-1]
-        item = UseStyle(time_word_with_mill, fore='blue') + item[len(utc_time_word):]
-        return item
+        try:
+            local_time = utc_time_str_2_time_stamp(utc_time_word)
+            time_word = format_time_stamp_2_string(local_time, is_mill=False)
+            time_word_with_mill = time_word + '.' + utc_time_word[-4:-1]
+            item = UseStyle(time_word_with_mill, fore='blue') + item[len(utc_time_word):]
+            return item
+        except Exception, e:
+            return word
