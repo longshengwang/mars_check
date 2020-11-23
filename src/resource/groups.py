@@ -21,6 +21,9 @@ class Groups(Resource):
     def get_data(self):
         return self.groups
 
+    def set_data(self, data):
+        self.groups = data
+
     @property
     def uni_key(self):
         return ['id', 'deviceId']
@@ -33,4 +36,10 @@ class Groups(Resource):
     def initialize(cls, mars_config):
         c = cls(mars_config)
         c.init_all_groups()
+        return c
+
+    @classmethod
+    def initialize_with(cls, mars_config, groups):
+        c = cls(mars_config)
+        c.set_data(groups)
         return c

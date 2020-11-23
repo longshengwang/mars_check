@@ -126,7 +126,7 @@ class CommandSelector:
                 return res
             else:
                 show_message = 'The selector count is not correct.(Expect is ' + \
-                      str(self.select_count) + ', but only select ' + str(len(self.select_index_list)) + ')'
+                               str(self.select_count) + ', but only select ' + str(len(self.select_index_list)) + ')'
                 print UseStyle(show_message, fore='red')
                 return None
 

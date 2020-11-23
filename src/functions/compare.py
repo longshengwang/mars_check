@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 import json
-import os
 import time
 
 from resource import DeviceConfigs, Hosts
