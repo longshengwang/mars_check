@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
-from constants import LINKS_NAME
+from ..constants import HOSTS_NAME
 from resource import Resource
 
 
-class Links(Resource):
+class Hosts(Resource):
     # {
     #    "hosts":
     #       [
@@ -13,40 +13,48 @@ class Links(Resource):
     #           {"id":"90:E2:BA:24:A1:34/None","mac":"90:E2:BA:24:A1:34","vlan":"None","innerVlan":"None","outerTpid":"unknown","configured":false,"ipAddresses":["192.168.10.83"],"locations":[{"elementId":"of:0000b86a97145100","port":"28"}]}
     #       ]
     # }
-    name = LINKS_NAME
-    links = {}
+    name = HOSTS_NAME
+    hosts = {}
     mars_config = None
-    url = "/mars/v1/links"
+    url = "/mars/v1/hosts"
 
     def __init__(self, mars_config):
         Resource.__init__(self, mars_config)
 
-    def init_all_links(self):
-        self.links = self.get(self.url)['links']
-        return self.links
+    def init_all_hosts(self):
+        self.hosts = self.get(self.url)['hosts']
+        return self.hosts
 
     def get_data(self):
-        return self.links
+        return self.hosts
 
-    def set_data(self, data):
-        self.links = data
+    def get_ip(self, mac):
+        for host_item in self.hosts:
+            if host_item['mac'] == mac:
+                ip_addr = host_item['ipAddresses']
+                if len(ip_addr) > 0:
+                    return ','.join(ip_addr)
+        return None
+
+    def set_data(self, hosts):
+        self.hosts = hosts
 
     @property
     def uni_key(self):
-        return ''
+        return 'id'
 
     @property
     def compare_key(self):
-        return []
+        return ['ipAddresses', 'locations', 'lastUpdateTime']
 
     @classmethod
     def initialize(cls, mars_config):
         c = cls(mars_config)
-        c.init_all_links()
+        c.init_all_hosts()
         return c
 
     @classmethod
-    def initialize_with(cls, mars_config, links):
+    def initialize_with(cls, mars_config, hosts):
         c = cls(mars_config)
-        c.set_data(links)
+        c.set_data(hosts)
         return c

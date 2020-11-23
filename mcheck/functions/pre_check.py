@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from lib.color import UseStyle
-from lib.printer import print_warn, print_normal
-from resource import DeviceConfigs, Flows, Groups, Hosts
-from utils import flow_to_line_string, group_to_line_string, get_devices_configs, get_flow, get_host, get_group
+from ..lib.color import UseStyle
+from ..lib.printer import print_warn, print_normal
+from ..resource import DeviceConfigs, Flows, Groups, Hosts
+from ..utils import flow_to_line_string, group_to_line_string, get_devices_configs, get_flow, get_host, get_group
 import time
 
 CORE_DEFAULT_FLOW_SIZE = 4

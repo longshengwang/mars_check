@@ -3,7 +3,7 @@ import sys
 import termios
 import tty
 
-from lib.color import UseStyle
+from color import UseStyle
 
 left = u'\u001b[1000D'
 right = u'\u001b[1000C'

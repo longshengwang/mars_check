@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from resource import Resource
-from constants import DEVICE_CONFIG_NAME
+from ..constants import DEVICE_CONFIG_NAME
 
 
 class DeviceConfigs(Resource):

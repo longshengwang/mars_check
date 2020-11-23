@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from constants import FLOW_NAME
+from ..constants import FLOW_NAME
 from resource import Resource
 
 

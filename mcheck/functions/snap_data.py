@@ -4,10 +4,10 @@ import os
 import shutil
 import time
 
-from constants import DEVICE_NAME, DEVICE_CONFIG_NAME, GROUPS_NAME, FLOW_NAME, HOSTS_NAME, LINKS_NAME
-from lib.printer import print_normal
-from resource import Devices, DeviceConfigs, Flows, Groups, Hosts, Links
-from utils import get_link, get_host, get_group, get_flow, get_devices, get_devices_configs
+from ..constants import DEVICE_NAME, DEVICE_CONFIG_NAME, GROUPS_NAME, FLOW_NAME, HOSTS_NAME, LINKS_NAME
+from ..lib.printer import print_normal
+from ..resource import Devices, DeviceConfigs, Flows, Groups, Hosts, Links
+from ..utils import get_link, get_host, get_group, get_flow, get_devices, get_devices_configs
 
 
 class SnapData:

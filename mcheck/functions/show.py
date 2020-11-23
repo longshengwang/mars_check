@@ -1,8 +1,8 @@
 # -*- coding:utf8 -*-
-from lib.color import UseStyle
-from lib.printer import print_normal, print_normal_start, print_normal_center, print_normal_end
-from resource import DeviceConfigs, Links, Hosts
-from utils import device_to_line_string, format_time_string_2_number, get_devices_configs, link_to_line_string, \
+from ..lib.color import UseStyle
+from ..lib.printer import print_normal, print_normal_start, print_normal_center, print_normal_end
+from ..resource import DeviceConfigs, Links, Hosts
+from ..utils import device_to_line_string, format_time_string_2_number, get_devices_configs, link_to_line_string, \
     get_link, host_to_line_string, get_host
 
 

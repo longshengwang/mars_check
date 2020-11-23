@@ -3,10 +3,14 @@
 import argparse
 import os
 
+import argcomplete as argcomplete
+
 import cmd_call
 # import config, snap, pre_check, compare, show_devices, show_links, show_hosts, log
 from constants import DEFAULT_CONFIG_PATH
 
+import sys
+sys.path.insert(0, "./")
 
 class DeviceIdAction(argparse.Action):
     def __init__(self, option_strings, dest, **kwargs):
@@ -84,7 +88,7 @@ def run():
     log_args.add_argument('-c', '--count', type=int, default=1000, help='The log count.(Default is 1000)')
     log_args.set_defaults(func=cmd_call.log)
 
-    # argcomplete.autocomplete(parser)
+    argcomplete.autocomplete(parser)
     args = parser.parse_args()
     args.func(args)
 

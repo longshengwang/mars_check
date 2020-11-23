@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
-from constants import HOSTS_NAME
+from ..constants import LINKS_NAME
 from resource import Resource
 
 
-class Hosts(Resource):
+class Links(Resource):
     # {
     #    "hosts":
     #       [
@@ -13,48 +13,40 @@ class Hosts(Resource):
     #           {"id":"90:E2:BA:24:A1:34/None","mac":"90:E2:BA:24:A1:34","vlan":"None","innerVlan":"None","outerTpid":"unknown","configured":false,"ipAddresses":["192.168.10.83"],"locations":[{"elementId":"of:0000b86a97145100","port":"28"}]}
     #       ]
     # }
-    name = HOSTS_NAME
-    hosts = {}
+    name = LINKS_NAME
+    links = {}
     mars_config = None
-    url = "/mars/v1/hosts"
+    url = "/mars/v1/links"
 
     def __init__(self, mars_config):
         Resource.__init__(self, mars_config)
 
-    def init_all_hosts(self):
-        self.hosts = self.get(self.url)['hosts']
-        return self.hosts
+    def init_all_links(self):
+        self.links = self.get(self.url)['links']
+        return self.links
 
     def get_data(self):
-        return self.hosts
+        return self.links
 
-    def get_ip(self, mac):
-        for host_item in self.hosts:
-            if host_item['mac'] == mac:
-                ip_addr = host_item['ipAddresses']
-                if len(ip_addr) > 0:
-                    return ','.join(ip_addr)
-        return None
-
-    def set_data(self, hosts):
-        self.hosts = hosts
+    def set_data(self, data):
+        self.links = data
 
     @property
     def uni_key(self):
-        return 'id'
+        return ''
 
     @property
     def compare_key(self):
-        return ['ipAddresses', 'locations', 'lastUpdateTime']
+        return []
 
     @classmethod
     def initialize(cls, mars_config):
         c = cls(mars_config)
-        c.init_all_hosts()
+        c.init_all_links()
         return c
 
     @classmethod
-    def initialize_with(cls, mars_config, hosts):
+    def initialize_with(cls, mars_config, links):
         c = cls(mars_config)
-        c.set_data(hosts)
+        c.set_data(links)
         return c
