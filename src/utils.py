@@ -163,6 +163,35 @@ def link_to_line_string(link, device_config_obj):
     return res
 
 
+# {
+#         "available": true,
+#         "community": null,
+#         "defaultCfg": true,
+#         "id": "of:0000b86a970c01c0",
+#         "leafGroup": {
+#             "name": "",
+#             "switch_port": 0
+#         },
+#         "mac": "B8:6A:97:0C:01:C0",
+#         "mfr": "",
+#         "mgmtIpAddress": "192.168.40.188",
+#         "name": "Leaf-46-54T-188",
+#         "nos": "onl",
+#         "port": 0,
+#         "protocol": "of",
+#         "rack_id": "",
+#         "type": "leaf"
+#     },
+def device_to_line_string(device_config):
+    res = '[ DEVICE ] ' + 'NAME: ' + device_config['name'] + \
+          ', ID: ' + device_config['id'] + \
+          ', AVAILABLE: ' + str(device_config['available']) + \
+          ', IP: ' + device_config['mgmtIpAddress'] + \
+          ', NOS: ' + device_config['nos']
+
+    return res
+
+
 def remove_last_word(word):
     return word[0:-1]
 
@@ -172,6 +201,10 @@ def format_time_stamp_2_string(time_stamp_str, is_mill=True):
     if is_mill:
         time_stamp = time_stamp / 1000
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_stamp))
+
+
+def format_time_string_2_number(time_str):
+    return str(int(time.mktime(time.strptime(time_str, '%Y-%m-%d %H:%M:%S'))))
 
 
 def get_flow(mars_config, snap_time):

@@ -7,6 +7,7 @@ from config import MarsConfig
 from functions.compare import ResourceCompare
 from functions.compare import compare_flows, compare_groups, compare_hosts, compare_link
 from functions.pre_check import PreCheck
+from functions.show import ShowResource
 from functions.snap_data import SnapData
 from lib.color import UseStyle
 from lib.command_selector import CommandSelector
@@ -67,8 +68,8 @@ def config(args):
     if args.url is None and args.password is None and args.user is None:
         mars_config = get_mars_config()
         print UseStyle("Mars Check Config", fore='green')
-        print UseStyle(' |- URL  : ', fore='green') + mars_config.get_url()
-        print UseStyle(' |_ USER : ', fore='green') + mars_config.get_auth()['user_name']
+        print UseStyle(' |-- URL  : ', fore='green') + mars_config.get_url()
+        print UseStyle(' |-- USER : ', fore='green') + mars_config.get_auth()['user_name']
 
 
 def snap(args):
@@ -250,3 +251,77 @@ def pre_check(args):
         else:
             check = PreCheck(mars_config)
             check.check_snap(selectors[0])
+    elif args.last_snap:
+        snap_times = get_all_snap_time(mars_config)
+        if len(snap_times) > 0:
+            check = PreCheck(mars_config)
+            check.check_snap(snap_times[0])
+
+
+def show_devices(args):
+    mars_config = get_mars_config()
+    if args.online:
+        show_obj = ShowResource(mars_config)
+        show_obj.show_online_devices()
+    elif args.snap_time:
+        snap_times = get_all_snap_time(mars_config)
+        cmd_selector = CommandSelector(snap_times, 'Please select one time to show.', select_count=1)
+        selectors = cmd_selector.get_selector()
+        if selectors is None:
+            print 'No data is selected for show.'
+        elif len(selectors) > 1:
+            pass
+        else:
+            show_obj = ShowResource(mars_config)
+            show_obj.show_snap_devices(selectors[0])
+    elif args.last_snap:
+        snap_times = get_all_snap_time(mars_config)
+        if len(snap_times) > 0:
+            show_obj = ShowResource(mars_config)
+            show_obj.show_snap_devices(snap_times[0])
+
+
+def show_links(args):
+    mars_config = get_mars_config()
+    if args.online:
+        show_obj = ShowResource(mars_config)
+        show_obj.show_online_links()
+    elif args.snap_time:
+        snap_times = get_all_snap_time(mars_config)
+        cmd_selector = CommandSelector(snap_times, 'Please select one time to show.', select_count=1)
+        selectors = cmd_selector.get_selector()
+        if selectors is None:
+            print 'No data is selected for show.'
+        elif len(selectors) > 1:
+            pass
+        else:
+            show_obj = ShowResource(mars_config)
+            show_obj.show_snap_links(selectors[0])
+    elif args.last_snap:
+        snap_times = get_all_snap_time(mars_config)
+        if len(snap_times) > 0:
+            show_obj = ShowResource(mars_config)
+            show_obj.show_snap_links(snap_times[0])
+
+
+def show_hosts(args):
+    mars_config = get_mars_config()
+    if args.online:
+        show_obj = ShowResource(mars_config)
+        show_obj.show_online_hosts()
+    elif args.snap_time:
+        snap_times = get_all_snap_time(mars_config)
+        cmd_selector = CommandSelector(snap_times, 'Please select one time to show.', select_count=1)
+        selectors = cmd_selector.get_selector()
+        if selectors is None:
+            print 'No data is selected for show.'
+        elif len(selectors) > 1:
+            pass
+        else:
+            show_obj = ShowResource(mars_config)
+            show_obj.show_snap_hosts(selectors[0])
+    elif args.last_snap:
+        snap_times = get_all_snap_time(mars_config)
+        if len(snap_times) > 0:
+            show_obj = ShowResource(mars_config)
+            show_obj.show_snap_hosts(snap_times[0])

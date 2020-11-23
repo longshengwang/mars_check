@@ -3,12 +3,8 @@
 import argparse
 import os
 
-from cmd_call import config, snap, pre_check, compare
+from cmd_call import config, snap, pre_check, compare, show_devices, show_links, show_hosts
 from constants import DEFAULT_CONFIG_PATH
-
-
-def show_devices(args):
-    print 'show devices'
 
 
 class DeviceIdAction(argparse.Action):
@@ -23,22 +19,37 @@ class DeviceIdAction(argparse.Action):
 def run():
     init_config_dir()
     parser = argparse.ArgumentParser(description="Mars Check Tool")
-    # group = parser.add_mutually_exclusive_group(required=True)
-    # group.add_argument('snap', help='Save the data of now.')
-    # group.add_argument('--check', action='store_true', help='Check the flow/group data if correct.')
-    # group.add_argument('--compare', action='store_true', help='Compare the different time data.')
 
     sub_parsers = parser.add_subparsers()
 
-    # device_args = sub_parsers.add_parser('devices', help='Show all the devices info.')
-    # device_args.set_defaults(func=show_devices)
-
+    # config cmd
     config_args = sub_parsers.add_parser('config', help='Set the mars url/user/password.')
     config_args.add_argument('-u', '--user', help='The mars user name.')
     config_args.add_argument('-p', '--password', help='The mars password.')
     config_args.add_argument('--url', help='The mars host url.(Example: https://192.168.1.20)')
     config_args.set_defaults(func=config)
 
+    # show cmd
+    show_args = sub_parsers.add_parser('show', help='Show the mars resource (Devices/Links).')
+    show_group = show_args.add_mutually_exclusive_group()
+
+    show_group.add_argument('-o', '--online', action='store_true', help='Show the online data.')
+    show_group.add_argument('-s', '--snap_time', action='store_true', help='Show the selected snap data.')
+    show_group.add_argument('-l', '--last_snap', action='store_true', help='Show the last snap data.')
+    show_group.set_defaults(last_snap=True)
+
+    show_sub_parses = show_args.add_subparsers()
+
+    show_device_args = show_sub_parses.add_parser('device', help='Show devices.')
+    show_device_args.set_defaults(func=show_devices)
+
+    show_link_args = show_sub_parses.add_parser('link', help='Show links.')
+    show_link_args.set_defaults(func=show_links)
+
+    show_host_args = show_sub_parses.add_parser('host', help='Show hosts.')
+    show_host_args.set_defaults(func=show_hosts)
+
+    # snap cmd
     snap_args = sub_parsers.add_parser('snap', help='Save the data of now.')
     snap_group = snap_args.add_mutually_exclusive_group(required=True)
     snap_group.add_argument('-l', '--list', action='store_true', help='List all the snap data.')
@@ -47,12 +58,15 @@ def run():
     snap_group.add_argument('-s', '--summary', action='store_true', help='Show the summary of all times.')
     snap_args.set_defaults(func=snap)
 
+    # check cmd
     check_args = sub_parsers.add_parser('check', help='Check the flow/group data if correct.')
     check_group = check_args.add_mutually_exclusive_group(required=True)
     check_group.add_argument('-o', '--online', action='store_true', help='Check the online data.')
-    check_group.add_argument('-t', '--snap_time', action='store_true', help='Check the data from snap data.')
+    check_group.add_argument('-s', '--snap_time', action='store_true', help='Check the data from snap data.')
+    check_group.add_argument('-l', '--last_snap', action='store_true', help='Check the last snap data.')
     check_args.set_defaults(func=pre_check)
 
+    # compare cmd
     compare_args = sub_parsers.add_parser('compare', help='Compare the different time data.')
     compare_args.add_argument('-d', '--device', help='Specify device for flow or group.')
     group = compare_args.add_mutually_exclusive_group(required=True)

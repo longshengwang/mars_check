@@ -28,6 +28,9 @@ class Links(Resource):
     def get_data(self):
         return self.links
 
+    def set_data(self, data):
+        self.links = data
+
     @property
     def uni_key(self):
         return ''
@@ -40,4 +43,10 @@ class Links(Resource):
     def initialize(cls, mars_config):
         c = cls(mars_config)
         c.init_all_links()
+        return c
+
+    @classmethod
+    def initialize_with(cls, mars_config, links):
+        c = cls(mars_config)
+        c.set_data(links)
         return c
