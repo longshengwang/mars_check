@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import re
 import time
+from datetime import datetime
 import json
 import os
 import requests
@@ -266,3 +267,42 @@ def get_all_snap_time(mars_config):
             pass
     # print int(time.mktime(time.strptime(time_str, '%Y-%m-%d %H:%M:%S'))) == time_stamp
     return res
+
+
+# datetime : utc -> local
+def utc2local(utc_dtm):
+    # UTC 时间转本地时间（ +8:00 ）
+    local_tm = datetime.fromtimestamp(0)
+    utc_tm = datetime.utcfromtimestamp(0)
+    offset = local_tm - utc_tm
+    return utc_dtm + offset
+
+
+# datetime : utc -> local
+def local2utc(local_dtm):
+    # UTC 时间转本地时间（ +8:00 ）
+    local_tm = datetime.fromtimestamp(0)
+    utc_tm = datetime.utcfromtimestamp(0)
+    offset = local_tm - utc_tm
+    return local_dtm - offset
+
+
+# 2020-10-21T01:12:12.222Z -> time stamp
+def utc_time_str_2_time_stamp(utc_time_str):
+    utc_time = time.mktime(time.strptime(utc_time_str, '%Y-%m-%dT%H:%M:%S.%fZ'))
+    utc_date_time = datetime.fromtimestamp(utc_time)
+    local_date_time = utc2local(utc_date_time)
+    return int(time.mktime(local_date_time.timetuple()))
+
+
+# time stamp(no mill seconds) -> 2020-10-21T01:12:12.000Z
+def time_stamp_2_utc_time_str(local_time_stamp):
+    local_datetime = datetime.fromtimestamp(local_time_stamp)
+    utc_datetime = local2utc(local_datetime)
+    return utc_datetime.strftime('%Y-%m-%dT%H:%M:%S.000Z')
+
+
+# date time(no mill seconds) -> 2020-10-21T01:12:12.000Z
+def date_time_2_utc_time_str(local_time):
+    utc_datetime = local2utc(local_time)
+    return utc_datetime.strftime('%Y-%m-%dT%H:%M:%S.000Z')

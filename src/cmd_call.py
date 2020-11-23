@@ -6,6 +6,7 @@ from os.path import expanduser
 from config import MarsConfig
 from functions.compare import ResourceCompare
 from functions.compare import compare_flows, compare_groups, compare_hosts, compare_link
+from functions.log import Log
 from functions.pre_check import PreCheck
 from functions.show import ShowResource
 from functions.snap_data import SnapData
@@ -107,7 +108,9 @@ def snap(args):
             print 'No data is selected for delete.'
             return
         else:
-            user_input = raw_input('Are you sure to delete the data: ' + ', '.join(selectors) + ' ?(Y/N):')
+            user_input = raw_input('Are you sure to ' + UseStyle('delete', fore='red') + ' the data: '
+                                   + UseStyle(', '.join(selectors), fore='red') + ' ?(Y/N):')
+
             if user_input == 'y' or user_input == 'Y' or user_input == 'yes' or user_input == 'YES':
                 snap_obj.delete(selectors)
 
@@ -325,3 +328,13 @@ def show_hosts(args):
         if len(snap_times) > 0:
             show_obj = ShowResource(mars_config)
             show_obj.show_snap_hosts(snap_times[0])
+
+
+def log(args):
+    mars_config = get_mars_config()
+    word = ''
+    if args.word is not None:
+        word = args.word
+
+    log = Log(mars_config)
+    log.show(word, args.count, args.last_hours)

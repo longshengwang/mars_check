@@ -130,4 +130,5 @@ def TestColor():
 
 
 if __name__ == '__main__':
-    TestColor()
+    a = greenStr('aa')
+    print a

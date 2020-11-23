@@ -3,7 +3,8 @@
 import argparse
 import os
 
-from cmd_call import config, snap, pre_check, compare, show_devices, show_links, show_hosts
+import cmd_call
+# import config, snap, pre_check, compare, show_devices, show_links, show_hosts, log
 from constants import DEFAULT_CONFIG_PATH
 
 
@@ -27,7 +28,7 @@ def run():
     config_args.add_argument('-u', '--user', help='The mars user name.')
     config_args.add_argument('-p', '--password', help='The mars password.')
     config_args.add_argument('--url', help='The mars host url.(Example: https://192.168.1.20)')
-    config_args.set_defaults(func=config)
+    config_args.set_defaults(func=cmd_call.config)
 
     # show cmd
     show_args = sub_parsers.add_parser('show', help='Show the mars resource (Devices/Links).')
@@ -41,13 +42,13 @@ def run():
     show_sub_parses = show_args.add_subparsers()
 
     show_device_args = show_sub_parses.add_parser('device', help='Show devices.')
-    show_device_args.set_defaults(func=show_devices)
+    show_device_args.set_defaults(func=cmd_call.show_devices)
 
     show_link_args = show_sub_parses.add_parser('link', help='Show links.')
-    show_link_args.set_defaults(func=show_links)
+    show_link_args.set_defaults(func=cmd_call.show_links)
 
     show_host_args = show_sub_parses.add_parser('host', help='Show hosts.')
-    show_host_args.set_defaults(func=show_hosts)
+    show_host_args.set_defaults(func=cmd_call.show_hosts)
 
     # snap cmd
     snap_args = sub_parsers.add_parser('snap', help='Save the data of now.')
@@ -56,7 +57,7 @@ def run():
     snap_group.add_argument('-d', '--delete', action='store_true', help='Delete the select data.')
     snap_group.add_argument('-g', '--get', action='store_true', help='Snap all the data.')
     snap_group.add_argument('-s', '--summary', action='store_true', help='Show the summary of all times.')
-    snap_args.set_defaults(func=snap)
+    snap_args.set_defaults(func=cmd_call.snap)
 
     # check cmd
     check_args = sub_parsers.add_parser('check', help='Check the flow/group data if correct.')
@@ -64,7 +65,7 @@ def run():
     check_group.add_argument('-o', '--online', action='store_true', help='Check the online data.')
     check_group.add_argument('-s', '--snap_time', action='store_true', help='Check the data from snap data.')
     check_group.add_argument('-l', '--last_snap', action='store_true', help='Check the last snap data.')
-    check_args.set_defaults(func=pre_check)
+    check_args.set_defaults(func=cmd_call.pre_check)
 
     # compare cmd
     compare_args = sub_parsers.add_parser('compare', help='Compare the different time data.')
@@ -74,7 +75,14 @@ def run():
     group.add_argument('-f', '--flow', action='store_true', help='Only compare flow data.')
     group.add_argument('-g', '--group', action='store_const', const='all', help='Only compare group data.')
     group.add_argument('-ho', '--host', action='store_true', help='Only compare host data.')
-    compare_args.set_defaults(func=compare)
+    compare_args.set_defaults(func=cmd_call.compare)
+
+    # log cmd
+    log_args = sub_parsers.add_parser('log', help='Show the log with search word.')
+    log_args.add_argument('-w', '--word', help='The filter keyword.')
+    log_args.add_argument('-l', '--last_hours', type=int, default=2, help='The last hours.')
+    log_args.add_argument('-c', '--count', type=int, default=1000, help='The log count.')
+    log_args.set_defaults(func=cmd_call.log)
 
     # argcomplete.autocomplete(parser)
     args = parser.parse_args()
