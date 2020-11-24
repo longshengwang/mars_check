@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from lib.color import UseStyle
-from lib.printer import print_warn, print_normal
+from lib.printer import print_warn, print_normal, print_normal_start, print_normal_center, print_normal_end
 from resource import DeviceConfigs, Flows, Groups, Hosts
-from utils import flow_to_line_string, group_to_line_string, get_devices_configs, get_flow, get_host, get_group
+from utils import flow_to_line_string, group_to_line_string, get_devices_configs, get_flow, get_host, get_group, \
+    host_to_line_string
 import time
 
 CORE_DEFAULT_FLOW_SIZE = 4
 
 
-class PreCheck:
+class Check:
     mars_config = None
     device_config_object = None
     flow_object = None
@@ -24,6 +25,7 @@ class PreCheck:
         self._check_if_contains_pending_flow()
         self._check_if_contains_pending_group()
         self._check_default_flow()
+        self._check_if_host_has_ip()
         print_normal('Check Finish.')
 
     def _get_online_data(self):
@@ -40,6 +42,7 @@ class PreCheck:
         self._check_if_contains_pending_flow()
         self._check_if_contains_pending_group()
         self._check_default_flow()
+        self._check_if_host_has_ip()
         print_normal('Check Finish.')
 
     def _get_snap_data(self, snap_time):
@@ -59,11 +62,10 @@ class PreCheck:
             if flow['state'] != 'ADDED':
                 if not is_print_header:
                     is_print_header = True
-                    print_warn('')
-                    print_warn('[ WARN ] FOUND pending flows.')
+                    print_normal_start('[ WARN ] FOUND pending flows.', color='red')
                 self._print_pending_flow(flow)
-        # if is_print_header:
-        #     print_warn('<==== FOUND pending flows')
+        if is_print_header:
+            print_normal_end('', color='red')
 
     def _check_if_contains_pending_group(self):
         print_normal("2. Start to check if contains pending group.")
@@ -73,11 +75,10 @@ class PreCheck:
             if group['state'] != 'ADDED':
                 if not is_print_header:
                     is_print_header = True
-                    print_warn('')
-                    print_warn('[ WARN ]FOUND pending groups ====>')
+                    print_normal_start('[ WARN ] FOUND pending groups ====>', color='red')
                 self._print_pending_group(group)
         if is_print_header:
-            print_warn('<==== FOUND pending groups')
+            print_normal_end('', color='red')
 
     # core flow
     def _check_default_flow(self):
@@ -106,16 +107,30 @@ class PreCheck:
         keys = device_flow_dict.keys()
         for device_id in keys:
             if len(device_flow_dict[device_id]) != CORE_DEFAULT_FLOW_SIZE:
-                print_warn('')
-                print_warn('>> SWITCH ' + self.device_config_object.get_device_name(device_id) +
-                           ' << The default flow from core app may miss some one [IPv4, LLDP, ARP, BDDP].')
+
+                print_normal_start('[ ERROR ] Device Name: ' + self.device_config_object.get_device_name(device_id) +
+                                   '; The default flow from core app may miss some one [IPv4, LLDP, ARP, BDDP].',  color='red')
                 for item in device_flow_dict[device_id]:
-                    print_warn(flow_to_line_string(item, self.host_object, self.device_config_object))
+                    print_normal_center(flow_to_line_string(item, self.host_object, self.device_config_object),  color='red')
+                print_normal_end(' ', color='red')
+
+    def _check_if_host_has_ip(self):
+        print_normal("4. Start to check if the host has ip address.")
+        has_found_warn = False
+        for host in self.host_object.get_data():
+            if host['ipAddresses'] is None or len(host['ipAddresses']) == 0:
+                if not has_found_warn:
+                    has_found_warn = True
+                    print_normal_start("[ WARN ] Found No Ip Host", color='red')
+                print_normal_center(host_to_line_string(host, self.device_config_object), color='red')
+
+        if has_found_warn:
+            print_normal_end(' ', color='red')
 
     def _print_pending_flow(self, flow):
         res = flow_to_line_string(flow, self.host_object, self.device_config_object)
-        print_warn(res)
+        print_normal_center(res, color='red')
 
     def _print_pending_group(self, group):
         res = group_to_line_string(group, self.device_config_object)
-        print_warn(res)
+        print_normal_center(res, color='red')

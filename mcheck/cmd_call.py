@@ -7,7 +7,7 @@ from config import MarsConfig
 from functions.compare import ResourceCompare
 from functions.compare import compare_flows, compare_groups, compare_hosts, compare_link
 from functions.log import Log
-from functions.pre_check import PreCheck
+from functions.check import Check
 from functions.show import ShowResource
 from functions.snap_data import SnapData
 from lib.color import UseStyle
@@ -241,7 +241,7 @@ def compare(args):
 def pre_check(args):
     mars_config = get_mars_config()
     if args.online:
-        check = PreCheck(mars_config)
+        check = Check(mars_config)
         check.check_online()
     elif args.snap_time:
         snap_times = get_all_snap_time(mars_config)
@@ -252,12 +252,12 @@ def pre_check(args):
         elif len(selectors) > 1:
             pass
         else:
-            check = PreCheck(mars_config)
+            check = Check(mars_config)
             check.check_snap(selectors[0])
     elif args.last_snap:
         snap_times = get_all_snap_time(mars_config)
         if len(snap_times) > 0:
-            check = PreCheck(mars_config)
+            check = Check(mars_config)
             check.check_snap(snap_times[0])
 
 

@@ -29,4 +29,4 @@ def print_normal_center(word, color=None):
 
 def print_normal_end(word, color=None):
     # print '[ ' + UseStyle('MARS', fore='green') + ' ] ---- ' + word if color is None else UseStyle(word, fore=color)
-    print ' ---- ' + word if color is None else UseStyle(word, fore=color)
+    print ' ---- ' + (word if color is None else UseStyle(word, fore=color))

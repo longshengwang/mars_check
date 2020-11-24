@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-#
-# import sys
-# reload(sys)
-# sys.path.insert(0, ".")
 import os
 import sys
 
@@ -10,15 +6,11 @@ file_path = os.path.abspath(__file__)
 sys.path.insert(0, os.path.dirname(file_path))
 
 import argparse
-
 import argcomplete as argcomplete
-
 import cmd_call
 # import config, snap, pre_check, compare, show_devices, show_links, show_hosts, log
 from constants import DEFAULT_CONFIG_PATH
 
-
-#
 
 class DeviceIdAction(argparse.Action):
     def __init__(self, option_strings, dest, **kwargs):
