@@ -141,7 +141,7 @@ def compare(args):
         keys = res.keys()
         for key in keys:
             device_name = resource_compare.device_config_object.get_device_name(key)
-            if args.device is not None and (device_name != args.device and device_name != args.device):
+            if args.device is not None and (device_name != args.device and key != args.device):
                 continue
 
             changes_json = res[key]
@@ -172,7 +172,7 @@ def compare(args):
         keys = res.keys()
         for key in keys:
             device_name = resource_compare.device_config_object.get_device_name(key)
-            if args.device is not None and (device_name != args.device and device_name != args.device):
+            if args.device is not None and (device_name != args.device and key != args.device):
                 continue
 
             changes_json = res[key]
