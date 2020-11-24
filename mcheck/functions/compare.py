@@ -2,8 +2,8 @@
 import json
 import time
 
-from ..resource import DeviceConfigs, Hosts
-from ..utils import format_time_stamp_2_string
+from resource import DeviceConfigs, Hosts
+from utils import format_time_stamp_2_string
 
 
 class ResourceCompare:

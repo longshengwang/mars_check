@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from ..constants import HOSTS_NAME
+from constants import HOSTS_NAME
 from resource import Resource
 
 

@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from ..constants import LINKS_NAME
+from constants import LINKS_NAME
 from resource import Resource
 
 

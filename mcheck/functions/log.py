@@ -3,9 +3,9 @@
 # 'https://192.168.200.148/mars/utility/logs/v1/controller?
 # match=device&number=1000&source=%2Froot%2Fonos%2Fapache-karaf-3.0.8%2Fdata%2Flog%2Fkaraf.log&start=2020-11-23T06:56:00.000Z' \
 
-from ..lib.color import STYLE, UseStyle
-from ..resource.resource import Resource
-from ..utils import utc_time_str_2_time_stamp, format_time_stamp_2_string, time_stamp_2_utc_time_str
+from lib.color import STYLE, UseStyle
+from resource.resource import Resource
+from utils import utc_time_str_2_time_stamp, format_time_stamp_2_string, time_stamp_2_utc_time_str
 import time
 
 RED_NUMBER = STYLE['fore']['red']
