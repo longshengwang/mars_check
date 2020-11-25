@@ -91,6 +91,10 @@ def run():
     trace_group.add_argument('-l', '--last_snap', action='store_true', help='Trace the last snap data.')
     trace_args.set_defaults(func=cmd_call.trace)
 
+    trace_args.add_argument('-src', required=True, help='The src host ip or mac.')
+    trace_args.add_argument('-dst', required=True, help='The dst host ip or mac.')
+    trace_args.add_argument('-gw', default=None, help='The gate host ip or mac.(One ip is enough)')
+
     # log cmd
     log_args = sub_parsers.add_parser('log', help='Show the log with search word.')
     log_args.add_argument('-w', '--word', help='The filter keyword.')
@@ -114,4 +118,3 @@ if __name__ == '__main__':
     # header_words = ['xxx', 'xxxx1', 'xxxx2']
     # sel = CommandSingleSelector(header_words, 'please select_one')
     # print sel.get_selector()
-

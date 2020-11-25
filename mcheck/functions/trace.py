@@ -7,6 +7,13 @@ from utils import get_devices_configs, get_flow, get_link, get_host, get_group, 
 from model.flow_path import find_path, find_flows
 
 
+def _print_host(host, host_type):
+    host_str = host['mac']
+    if len(host['ipAddresses']) > 0:
+        host_str = host_str + ' (' + ', '.join(host['ipAddresses']) + ')'
+
+    print 'The ' + UseStyle(host_type, fore='green') + ' host is ' + UseStyle(host_str, fore='green')
+
 class Trace:
     mars_config = None
 
@@ -50,19 +57,25 @@ class Trace:
         src_host = filter(lambda x: x['mac'] == self.src_mac, hosts)[0]
         dst_host = filter(lambda x: x['mac'] == self.dst_mac, hosts)[0]
 
+        _print_host(src_host, 'SRC')
+        _print_host(dst_host, 'DST')
+
         try:
             if self.gateway is None:
                 paths = find_path(self.flow_obj.get_data(), self.link_obj.get_data(), self.group_obj.get_data(),
                                   src_host,
                                   dst_host)
-                print 'The Path is : '
+                print '\nThe Path is : '
                 self._print_paths(src_host, dst_host, paths)
             else:
                 gateway = filter(lambda x: x['mac'] == self.gateway, hosts)[0]
+
+                _print_host(gateway, 'GATEWAY')
+
                 paths1 = find_path(self.flow_obj.get_data(), self.link_obj.get_data(), self.group_obj.get_data(),
                                    src_host,
                                    gateway)
-                print 'The Path from SRC to GATEWAY is : '
+                print '\nThe Path from SRC to GATEWAY is : '
                 self._print_paths(src_host, gateway, paths1, is_dst_gateway=True)
                 paths2 = find_path(self.flow_obj.get_data(), self.link_obj.get_data(), self.group_obj.get_data(),
                                    gateway,
@@ -108,6 +121,17 @@ class Trace:
         else:
             self.gateway = selector_str.split('(')[0]
             print 'The selected ' + UseStyle('GATEWAY', fore='green') + ' is ' + UseStyle(selector_str, fore='green')
+
+    def get_host_mac(self, ip_or_mac):
+        for host in self.hosts_obj.get_data():
+            if host['mac'] == ip_or_mac:
+                return host['mac']
+
+            for ip in host['ipAddresses']:
+                if ip == ip_or_mac:
+                    return host['mac']
+
+        return None
 
     def _print_paths(self, src_host, dst_host, paths, is_dst_gateway=False, is_src_gateway=False):
         print UseStyle(
