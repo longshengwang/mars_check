@@ -4,8 +4,8 @@ from setuptools import setup, find_packages
 
 
 setup(
-      name="mcheck",
-      version="1.2",
+      name="m_check",
+      version="1.0.0",
       keywords='mars check',
       description="mars check command",
       author="Nocsys",
