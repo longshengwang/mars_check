@@ -10,6 +10,7 @@ from functions.log import Log
 from functions.check import Check
 from functions.show import ShowResource
 from functions.snap_data import SnapData
+from functions.trace import Trace
 from lib.color import UseStyle
 from lib.command_selector import CommandSelector
 from lib.printer import print_normal, print_normal_center, print_normal_end, print_normal_start, \
@@ -338,3 +339,71 @@ def log(args):
 
     log = Log(mars_config)
     log.show(word, args.count, args.last_hours)
+
+
+def trace(args):
+    mars_config = get_mars_config()
+    trace_obj = Trace(mars_config)
+    if args.online:
+        trace_obj.init_online_data()
+    elif args.snap_time:
+        snap_times = get_all_snap_time(mars_config)
+        cmd_selector = CommandSelector(snap_times, 'Please select one time to trace.', select_count=1)
+        selectors = cmd_selector.get_selector()
+        if selectors is None:
+            print 'No data is selected for trace.'
+            return
+        elif len(selectors) > 1:
+            pass
+        else:
+            trace_obj.init_snap_data(selectors[0])
+    elif args.last_snap:
+        snap_times = get_all_snap_time(mars_config)
+        if len(snap_times) > 0:
+            trace_obj.init_snap_data(snap_times[0])
+    else:
+        return
+
+    try:
+        # trace_obj.select_src_host()
+        # trace_obj.select_dst_host()
+        # trace_obj.select_gateway()
+        src_mac = trace_obj.get_host_mac(args.src)
+        dst_mac = trace_obj.get_host_mac(args.dst)
+
+        if src_mac is None:
+            print UseStyle('Cannot find the src host by ', fore='yellow') + UseStyle('"' + args.src + '"', fore='red')
+            return
+        if dst_mac is None:
+            print UseStyle('Cannot find the dst host by ', fore='yellow') + UseStyle('"' + args.dst + '"', fore='red')
+            return
+        trace_obj.src_mac = src_mac
+        trace_obj.dst_mac = dst_mac
+
+        if args.gw is not None:
+            gw = trace_obj.get_host_mac(args.gw)
+            if gw is None:
+                print UseStyle('Cannot find the gateway by ', fore='yellow') + UseStyle('"' + args.gw + '"',fore='red')
+                return
+            trace_obj.gateway = gw
+        trace_obj.get_path()
+    except Exception, e:
+        print UseStyle(e.message, fore='red')
+#
+# if __name__ == '__main__':
+#     d = {'aa': 1}
+#     print d
+#     mars_config = get_mars_config()
+#     trace = Trace(mars_config)
+#     trace.src_mac = '52:54:00:52:D1:6B'
+#     # trace.dst_mac = '52:54:00:39:6E:54'
+#     trace.dst_mac = '74:D4:35:DE:06:D8'
+#     trace.gateway = '3C:2C:99:86:94:42'
+#
+#     # trace.dst_mac = '3C:2C:99:86:94:42'
+#     # trace.src_mac = '52:54:00:77:A2:E1'
+#
+#
+#     snap_times = get_all_snap_time(mars_config)
+#     trace.init_snap_data(snap_times[0])
+#     trace.get_path()

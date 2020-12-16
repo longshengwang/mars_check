@@ -2,6 +2,8 @@
 import os
 import sys
 
+from lib.command_single_selector import CommandSingleSelector
+
 file_path = os.path.abspath(__file__)
 sys.path.insert(0, os.path.dirname(file_path))
 
@@ -81,6 +83,18 @@ def run():
     group.add_argument('-ho', '--host', action='store_true', help='Only compare host data.')
     compare_args.set_defaults(func=cmd_call.compare)
 
+    # trace cmd
+    trace_args = sub_parsers.add_parser('trace', help='Trace the path of two hosts.')
+    trace_group = trace_args.add_mutually_exclusive_group(required=True)
+    trace_group.add_argument('-o', '--online', action='store_true', help='Trace the online data.')
+    trace_group.add_argument('-s', '--snap_time', action='store_true', help='Trace the data from snap data.')
+    trace_group.add_argument('-l', '--last_snap', action='store_true', help='Trace the last snap data.')
+    trace_args.set_defaults(func=cmd_call.trace)
+
+    trace_args.add_argument('-src', required=True, help='The src host ip or mac.')
+    trace_args.add_argument('-dst', required=True, help='The dst host ip or mac.')
+    trace_args.add_argument('-gw', default=None, help='The gate host ip or mac.(One ip is enough)')
+
     # log cmd
     log_args = sub_parsers.add_parser('log', help='Show the log with search word.')
     log_args.add_argument('-w', '--word', help='The filter keyword.')
@@ -100,3 +114,7 @@ def init_config_dir():
 
 if __name__ == '__main__':
     run()
+
+    # header_words = ['xxx', 'xxxx1', 'xxxx2']
+    # sel = CommandSingleSelector(header_words, 'please select_one')
+    # print sel.get_selector()

@@ -130,5 +130,7 @@ def TestColor():
 
 
 if __name__ == '__main__':
-    a = greenStr('aa')
-    print a
+    print UseStyle('         ', mode='underline', fore='cyan')
+
+    print UseStyle('|   asd |', mode='underline', fore='cyan')
+    # print a

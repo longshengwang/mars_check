@@ -152,6 +152,7 @@ def compare_groups(before_groups, after_groups, device_id_4_compare=None):
 def compare_link(before_links, after_links):
     res = {'added': [], 'removed': []}
     before_links_dict = {}
+    after_links_dict = {}
     for item in before_links:
         link_id = _get_link_id(item)
         if link_id not in before_links_dict:
@@ -159,10 +160,14 @@ def compare_link(before_links, after_links):
 
     for item in after_links:
         a_link_id = _get_link_id(item)
-        if a_link_id in before_links_dict:
-            del before_links_dict[a_link_id]
+        if a_link_id not in after_links_dict:
+            after_links_dict[a_link_id] = item
+
+    for link_id in after_links_dict:
+        if link_id in before_links_dict:
+            del before_links_dict[link_id]
         else:
-            res['added'].append(item)
+            res['added'].append(after_links_dict[link_id])
 
     for item in before_links_dict.values():
         res['removed'].append(item)
