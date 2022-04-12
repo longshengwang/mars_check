@@ -1,20 +1,20 @@
 # Mars Check Command Tools
 
 ## local command install
-1. `pip install .`
-2. add `eval "$(register-python-argcomplete mcheck)"` to `.bashrc`
-3. use `mcheck` command at terminal
+1. `pip3 install .`
+2. add `eval "$(register-python-argcomplete3 marscheck)"` to `.bashrc`
+3. use `marscheck` command at terminal
 > the second step can support tab help
 
 ```
-~ mcheck --help
+~ marscheck --help
 --help   -h       check    compare  config   log      show     snap
 ```
 
 ## update for local command 
 ```
-$ pip uninstall mcheck
-$ pip install .
+$ pip3 uninstall marscheck
+$ pip3 install .
 ```
 
 ## 1. config
@@ -22,7 +22,7 @@ $ pip install .
 - user
 - password  
 ```
-usage: main.py config [-h] [-u USER] [-p PASSWORD] [--url URL]
+usage: marscheck config [-h] [-u USER] [-p PASSWORD] [--url URL]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -33,12 +33,12 @@ optional arguments:
 ```  
 
 ## 2. snap
-- get the data( device/device_config/links/hosts/flows/groups ) from mars, and save to local file system (~/.mars_check/)
+- get the data( device/device_config/links/hosts/flows/groups ) from mars, and save to local file system (<B>~/.mars_check/</B>)
 - list all snap time
 - list all the snap summary
 - delete the selected time
 ```
-usage: main.py snap [-h] (-l | -d | -g | -s)
+usage: marscheck snap [-h] (-l | -d | -g | -s)
 
 optional arguments:
   -h, --help     show this help message and exit
@@ -53,7 +53,7 @@ optional arguments:
 - check the last snap data
 - check the selected snap data
 ```
-usage: main.py check [-h] (-o | -s | -l)
+usage: marscheck check [-h] (-o | -s | -l)
 
 optional arguments:
   -h, --help       show this help message and exit
@@ -68,7 +68,7 @@ optional arguments:
 - host
 - link
 ```
-usage: main.py compare [-h] [-d DEVICE] (-l | -f | -g | -ho)
+usage: marscheck compare [-h] [-d DEVICE] (-l | -f | -g | -ho)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -86,7 +86,7 @@ optional arguments:
 - set the count items of search data
 - set the start search time
 ```
-usage: main.py log [-h] [-w WORD] [-l LAST_HOURS] [-c COUNT]
+usage: marscheck log [-h] [-w WORD] [-l LAST_HOURS] [-c COUNT]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -103,7 +103,7 @@ optional arguments:
 - show hosts
 - show links  
 ```
-usage: main.py show [-h] [-o | -s | -l] {device,link,host} ...
+usage: marscheck show [-h] [-o | -s | -l] {device,link,host} ...
 
 positional arguments:
   {device,link,host}
