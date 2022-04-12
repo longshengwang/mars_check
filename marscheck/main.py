@@ -103,6 +103,11 @@ def run():
 
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
+
+    if (not hasattr(args, 'func')):
+        parser.print_help()
+        sys.exit(1)
+
     args.func(args)
 
 
