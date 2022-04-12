@@ -27,10 +27,14 @@ class Resource:
 
     def get(self, url):
         auth = self.mars_config.get_auth()
-        requests.packages.urllib3.disable_warnings()
+        r = requests.post('http://' + self.mars_config.get_url() + '/mars/useraccount/v1/login', headers={'Content-Type': 'application/json', 'Accept': 'application/json'}, json = auth)
+        token=''
+        if (r.status_code == 200):
+            token = r.headers['MARS_G_SESSION_ID']
 
-        res = requests.get(self.mars_config.get_url() + url,
-                           auth=HTTPBasicAuth(auth['user_name'], auth['password']),
+        requests.packages.urllib3.disable_warnings()
+        res = requests.get('https://' + self.mars_config.get_url() + url,
+                           headers= {'Cookie': 'marsGSessionId=' + token},
                            verify=False)
         if res.status_code == 200:
             return res.json()
