@@ -32,7 +32,7 @@ def run():
     config_args = sub_parsers.add_parser('config', help='Set the mars url/user/password.')
     config_args.add_argument('-u', '--user', help='The mars user name.')
     config_args.add_argument('-p', '--password', help='The mars password.')
-    config_args.add_argument('--url', help='The mars host url.(Example: https://192.168.1.20)')
+    config_args.add_argument('--url', help='The mars host IP.(Example: 192.168.1.20)')
     config_args.set_defaults(func=cmd_call.config)
 
     # show cmd
@@ -42,7 +42,7 @@ def run():
     show_group.add_argument('-o', '--online', action='store_true', help='Show the online data.')
     show_group.add_argument('-s', '--snap_time', action='store_true', help='Show the selected snap data.')
     show_group.add_argument('-l', '--last_snap', action='store_true', help='Show the last snap data.')
-    show_group.set_defaults(last_snap=True)
+    show_group.set_defaults(last_snap=True, func=cmd_call.show_devices)
 
     show_sub_parses = show_args.add_subparsers()
 

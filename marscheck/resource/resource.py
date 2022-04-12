@@ -31,6 +31,8 @@ class Resource:
         token=''
         if (r.status_code == 200):
             token = r.headers['MARS_G_SESSION_ID']
+        else:
+            raise Exception('Http request get token error.')
 
         requests.packages.urllib3.disable_warnings()
         res = requests.get('https://' + self.mars_config.get_url() + url,

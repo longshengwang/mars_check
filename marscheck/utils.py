@@ -8,7 +8,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 import sys
 
-import constants
+from constants import *
 
 def get(url, auth):
     res = requests.get(url, auth=HTTPBasicAuth(auth['user_name'], auth['password']), verify=False)

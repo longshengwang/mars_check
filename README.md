@@ -18,7 +18,7 @@ $ pip install .
 ```
 
 ## 1. config
-- mars url (https://127.0.0.1)
+- mars url (192.168.20.1)
 - user
 - password  
 ```
@@ -29,11 +29,11 @@ optional arguments:
   -u USER, --user USER  The mars user name.
   -p PASSWORD, --password PASSWORD
                         The mars password.
-  --url URL             The mars host url.(Example: https://192.168.1.20)
+  --url URL             The mars host IP.(Example: 192.168.1.20)
 ```  
 
 ## 2. snap
-- get the data( device/device_config/links/hosts/flows/groups ) from mars, and save to local file system
+- get the data( device/device_config/links/hosts/flows/groups ) from mars, and save to local file system (~/.mars_check/)
 - list all snap time
 - list all the snap summary
 - delete the selected time
