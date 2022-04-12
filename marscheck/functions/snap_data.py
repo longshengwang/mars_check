@@ -59,7 +59,7 @@ class SnapData:
                     FLOW_NAME: len(get_flow(self.mars_config, snap_time)),
                 }
                 res.append(cur_summary)
-            except ValueError, e:
+            except ValueError as e:
                 pass
 
         return res

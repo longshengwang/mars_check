@@ -3,23 +3,23 @@ import os
 
 from os.path import expanduser
 
-from config import MarsConfig
-from functions.compare import ResourceCompare
-from functions.compare import compare_flows, compare_groups, compare_hosts, compare_link
-from functions.log import Log
-from functions.check import Check
-from functions.show import ShowResource
-from functions.snap_data import SnapData
-from functions.trace import Trace
-from lib.color import UseStyle
-from lib.command_selector import CommandSelector
-from lib.printer import print_normal, print_normal_center, print_normal_end, print_normal_start, \
+from .config import MarsConfig
+from .functions.compare import ResourceCompare
+from .functions.compare import compare_flows, compare_groups, compare_hosts, compare_link
+from .functions.log import Log
+from .functions.check import Check
+from .functions.show import ShowResource
+from .functions.snap_data import SnapData
+from .functions.trace import Trace
+from .lib.color import UseStyle
+from .lib.command_selector import CommandSelector
+from .lib.printer import print_normal, print_normal_center, print_normal_end, print_normal_start, \
     print_normal_sub
-from utils import flow_to_line_string, group_to_line_string, host_to_line_string, link_to_line_string
-from utils import get_flow, get_group, get_host, get_link
-from utils import fix_string_to_size, get_all_snap_time
-from constants import DEVICE_NAME, DEVICE_CONFIG_NAME, LINKS_NAME, HOSTS_NAME, FLOW_NAME, GROUPS_NAME
-from constants import DEFAULT_CONFIG_PATH, URL_CONFIG_FILE, USER_CONFIG_FILE, PASSWORD_CONFIG_FILE
+from .utils import flow_to_line_string, group_to_line_string, host_to_line_string, link_to_line_string
+from .utils import get_flow, get_group, get_host, get_link
+from .utils import fix_string_to_size, get_all_snap_time
+from .constants import DEVICE_NAME, DEVICE_CONFIG_NAME, LINKS_NAME, HOSTS_NAME, FLOW_NAME, GROUPS_NAME
+from .constants import DEFAULT_CONFIG_PATH, URL_CONFIG_FILE, USER_CONFIG_FILE, PASSWORD_CONFIG_FILE
 
 
 def read_config(path):
@@ -69,9 +69,9 @@ def config(args):
 
     if args.url is None and args.password is None and args.user is None:
         mars_config = get_mars_config()
-        print UseStyle("Mars Check Config", fore='green')
-        print UseStyle(' |-- URL  : ', fore='green') + mars_config.get_url()
-        print UseStyle(' |-- USER : ', fore='green') + mars_config.get_auth()['user_name']
+        print(UseStyle("Mars Check Config", fore='green'))
+        print(UseStyle(' |-- URL  : ', fore='green') + mars_config.get_url())
+        print(UseStyle(' |-- USER : ', fore='green') + mars_config.get_auth()['user_name'])
 
 
 def snap(args):
@@ -80,7 +80,7 @@ def snap(args):
     if args.list:
         snap_times = get_all_snap_time(mars_config)
         for item in snap_times:
-            print item
+            print(item)
     elif args.get:
         snap_obj.snap_all_data()
     elif args.summary:
@@ -100,16 +100,16 @@ def snap(args):
                   + UseStyle(' | ', fore='red')
             res = res + LINKS_NAME + ':' + fix_string_to_size(str(item[LINKS_NAME]), word_len)
 
-            print res
+            print(res)
     elif args.delete:
         snap_times = get_all_snap_time(mars_config)
         cmd_selector = CommandSelector(snap_times, 'Please select times to delete.')
         selectors = cmd_selector.get_selector()
         if len(selectors) == 0:
-            print 'No data is selected for delete.'
+            print('No data is selected for delete.')
             return
         else:
-            user_input = raw_input('Are you sure to ' + UseStyle('delete', fore='red') + ' the data: '
+            user_input = input('Are you sure to ' + UseStyle('delete', fore='red') + ' the data: '
                                    + UseStyle(', '.join(selectors), fore='red') + ' ?(Y/N):')
 
             if user_input == 'y' or user_input == 'Y' or user_input == 'yes' or user_input == 'YES':
@@ -139,7 +139,7 @@ def compare(args):
         before_flow = get_flow(mars_config, before_time)
         after_flow = get_flow(mars_config, after_time)
         res = compare_flows(before_flow, after_flow)
-        keys = res.keys()
+        keys = list(res.keys())
         for key in keys:
             device_name = resource_compare.device_config_object.get_device_name(key)
             if args.device is not None and (device_name != args.device and key != args.device):
@@ -170,7 +170,7 @@ def compare(args):
         before_group = get_group(mars_config, before_time)
         after_group = get_group(mars_config, after_time)
         res = compare_groups(before_group, after_group)
-        keys = res.keys()
+        keys = list(res.keys())
         for key in keys:
             device_name = resource_compare.device_config_object.get_device_name(key)
             if args.device is not None and (device_name != args.device and key != args.device):
@@ -249,7 +249,7 @@ def pre_check(args):
         cmd_selector = CommandSelector(snap_times, 'Please select one time to check.', select_count=1)
         selectors = cmd_selector.get_selector()
         if selectors is None:
-            print 'No data is selected for check.'
+            print('No data is selected for check.')
         elif len(selectors) > 1:
             pass
         else:
@@ -272,7 +272,7 @@ def show_devices(args):
         cmd_selector = CommandSelector(snap_times, 'Please select one time to show.', select_count=1)
         selectors = cmd_selector.get_selector()
         if selectors is None:
-            print 'No data is selected for show.'
+            print('No data is selected for show.')
         elif len(selectors) > 1:
             pass
         else:
@@ -295,7 +295,7 @@ def show_links(args):
         cmd_selector = CommandSelector(snap_times, 'Please select one time to show.', select_count=1)
         selectors = cmd_selector.get_selector()
         if selectors is None:
-            print 'No data is selected for show.'
+            print('No data is selected for show.')
         elif len(selectors) > 1:
             pass
         else:
@@ -318,7 +318,7 @@ def show_hosts(args):
         cmd_selector = CommandSelector(snap_times, 'Please select one time to show.', select_count=1)
         selectors = cmd_selector.get_selector()
         if selectors is None:
-            print 'No data is selected for show.'
+            print('No data is selected for show.')
         elif len(selectors) > 1:
             pass
         else:
@@ -351,7 +351,7 @@ def trace(args):
         cmd_selector = CommandSelector(snap_times, 'Please select one time to trace.', select_count=1)
         selectors = cmd_selector.get_selector()
         if selectors is None:
-            print 'No data is selected for trace.'
+            print('No data is selected for trace.')
             return
         elif len(selectors) > 1:
             pass
@@ -372,10 +372,10 @@ def trace(args):
         dst_mac = trace_obj.get_host_mac(args.dst)
 
         if src_mac is None:
-            print UseStyle('Cannot find the src host by ', fore='yellow') + UseStyle('"' + args.src + '"', fore='red')
+            print(UseStyle('Cannot find the src host by ', fore='yellow') + UseStyle('"' + args.src + '"', fore='red'))
             return
         if dst_mac is None:
-            print UseStyle('Cannot find the dst host by ', fore='yellow') + UseStyle('"' + args.dst + '"', fore='red')
+            print(UseStyle('Cannot find the dst host by ', fore='yellow') + UseStyle('"' + args.dst + '"', fore='red'))
             return
         trace_obj.src_mac = src_mac
         trace_obj.dst_mac = dst_mac
@@ -383,12 +383,12 @@ def trace(args):
         if args.gw is not None:
             gw = trace_obj.get_host_mac(args.gw)
             if gw is None:
-                print UseStyle('Cannot find the gateway by ', fore='yellow') + UseStyle('"' + args.gw + '"',fore='red')
+                print(UseStyle('Cannot find the gateway by ', fore='yellow') + UseStyle('"' + args.gw + '"',fore='red'))
                 return
             trace_obj.gateway = gw
         trace_obj.get_path()
-    except Exception, e:
-        print UseStyle(e.message, fore='red')
+    except Exception as e:
+        print(UseStyle(e.message, fore='red'))
 #
 # if __name__ == '__main__':
 #     d = {'aa': 1}

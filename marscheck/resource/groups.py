@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from constants import GROUPS_NAME
 
-from resource import Resource
+from .resource import Resource
 
 
 class Groups(Resource):

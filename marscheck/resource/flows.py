@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from constants import FLOW_NAME
-from resource import Resource
+from .resource import Resource
 
 
 class Flows(Resource):

@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from constants import LINKS_NAME
-from resource import Resource
+from .resource import Resource
 
 
 class Links(Resource):

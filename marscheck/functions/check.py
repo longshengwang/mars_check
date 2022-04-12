@@ -104,7 +104,7 @@ class Check:
                              or criteria[0]['ethType'] == '0x806'):
                     device_flow_dict[device_id].append(flow_item)
         # check
-        keys = device_flow_dict.keys()
+        keys = list(device_flow_dict.keys())
         for device_id in keys:
             if len(device_flow_dict[device_id]) != CORE_DEFAULT_FLOW_SIZE:
 

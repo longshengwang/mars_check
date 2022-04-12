@@ -12,7 +12,7 @@ def _print_host(host, host_type):
     if len(host['ipAddresses']) > 0:
         host_str = host_str + ' (' + ', '.join(host['ipAddresses']) + ')'
 
-    print 'The ' + UseStyle(host_type, fore='green') + ' host is ' + UseStyle(host_str, fore='green')
+    print('The ' + UseStyle(host_type, fore='green') + ' host is ' + UseStyle(host_str, fore='green'))
 
 class Trace:
     mars_config = None
@@ -32,7 +32,7 @@ class Trace:
         self.mars_config = mars_config
 
     def init_online_data(self):
-        print 'Start to trace the ' + UseStyle('ONLINE', fore='green', mode='underline') + ' data'
+        print('Start to trace the ' + UseStyle('ONLINE', fore='green', mode='underline') + ' data')
         self.device_config_obj = DeviceConfigs.initialize(self.mars_config)
         self.hosts_obj = Hosts.initialize(self.mars_config)
         self.group_obj = Groups.initialize(self.mars_config)
@@ -40,7 +40,7 @@ class Trace:
         self.link_obj = Links.initialize(self.mars_config)
 
     def init_snap_data(self, snap_time_str):
-        print 'Start to trace the ' + UseStyle(snap_time_str, fore='green', mode='underline') + ' snap data\n'
+        print('Start to trace the ' + UseStyle(snap_time_str, fore='green', mode='underline') + ' snap data\n')
         snap_time = format_time_string_2_number(snap_time_str)
         self.snap_time = snap_time
         self.device_config_obj = DeviceConfigs.initialize_with(self.mars_config,
@@ -51,7 +51,7 @@ class Trace:
         self.link_obj = Links.initialize_with(self.mars_config, get_link(self.mars_config, snap_time))
 
     def get_path(self):
-        print ''
+        print('')
 
         hosts = self.hosts_obj.get_data()
         src_host = filter(lambda x: x['mac'] == self.src_mac, hosts)[0]
@@ -65,7 +65,7 @@ class Trace:
                 paths = find_path(self.flow_obj.get_data(), self.link_obj.get_data(), self.group_obj.get_data(),
                                   src_host,
                                   dst_host)
-                print '\nThe Path is : '
+                print('\nThe Path is : ')
                 self._print_paths(src_host, dst_host, paths)
             else:
                 gateway = filter(lambda x: x['mac'] == self.gateway, hosts)[0]
@@ -75,16 +75,16 @@ class Trace:
                 paths1 = find_path(self.flow_obj.get_data(), self.link_obj.get_data(), self.group_obj.get_data(),
                                    src_host,
                                    gateway)
-                print '\nThe Path from SRC to GATEWAY is : '
+                print('\nThe Path from SRC to GATEWAY is : ')
                 self._print_paths(src_host, gateway, paths1, is_dst_gateway=True)
                 paths2 = find_path(self.flow_obj.get_data(), self.link_obj.get_data(), self.group_obj.get_data(),
                                    gateway,
                                    dst_host)
 
-                print 'The Path from GATEWAY to DST is : '
+                print('The Path from GATEWAY to DST is : ')
                 self._print_paths(gateway, dst_host, paths2, is_src_gateway=True)
-        except Exception, e:
-            print UseStyle(e.message, fore='red')
+        except Exception as e:
+            print(UseStyle(e.message, fore='red'))
 
     def select_src_host(self):
         host_str_list = [
@@ -95,7 +95,7 @@ class Trace:
         cmd_selector = CommandSingleSelector(host_str_list, 'Please select the src host.')
         selector_str = cmd_selector.get_selector()
         self.src_mac = selector_str.split('(')[0]
-        print 'The selected ' + UseStyle('SRC', fore='green') + ' host is ' + UseStyle(selector_str, fore='green')
+        print('The selected ' + UseStyle('SRC', fore='green') + ' host is ' + UseStyle(selector_str, fore='green'))
 
     def select_dst_host(self):
         host_str_list = [
@@ -105,7 +105,7 @@ class Trace:
         cmd_selector = CommandSingleSelector(host_str_list, 'Please select the dst host.')
         selector_str = cmd_selector.get_selector()
         self.dst_mac = selector_str.split('(')[0]
-        print 'The selected ' + UseStyle('DST', fore='green') + ' host is ' + UseStyle(selector_str, fore='green')
+        print('The selected ' + UseStyle('DST', fore='green') + ' host is ' + UseStyle(selector_str, fore='green'))
 
     def select_gateway(self):
         no_gateway_str = 'NO GATEWAY'
@@ -117,10 +117,10 @@ class Trace:
         cmd_selector = CommandSingleSelector(host_str_list, 'Please select the gateway host.')
         selector_str = cmd_selector.get_selector()
         if no_gateway_str == selector_str:
-            print UseStyle('NO GATEWAY', fore='green')
+            print(UseStyle('NO GATEWAY', fore='green'))
         else:
             self.gateway = selector_str.split('(')[0]
-            print 'The selected ' + UseStyle('GATEWAY', fore='green') + ' is ' + UseStyle(selector_str, fore='green')
+            print('The selected ' + UseStyle('GATEWAY', fore='green') + ' is ' + UseStyle(selector_str, fore='green'))
 
     def get_host_mac(self, ip_or_mac):
         for host in self.hosts_obj.get_data():
@@ -134,9 +134,9 @@ class Trace:
         return None
 
     def _print_paths(self, src_host, dst_host, paths, is_dst_gateway=False, is_src_gateway=False):
-        print UseStyle(
+        print(UseStyle(
             '[GATEWAY]' if is_src_gateway else (src_host['mac'] + '(' + ','.join(src_host['ipAddresses']) + ')'),
-            fore='yellow'),
+            fore='yellow'), end=' ')
 
         first_link_word = ' X '
 
@@ -145,9 +145,9 @@ class Trace:
                 first_link_word = '==>'
 
         if first_link_word == ' X ':
-            print UseStyle(first_link_word, fore='red'),
+            print(UseStyle(first_link_word, fore='red'), end=' ')
         else:
-            print UseStyle(first_link_word, fore='green'),
+            print(UseStyle(first_link_word, fore='green'), end=' ')
 
         for path in paths:
             device_name = self.device_config_obj.get_device_name(path.flow['deviceId'])
@@ -156,8 +156,8 @@ class Trace:
             if path.flow['state'] != 'ADDED':
                 link_sign = UseStyle(' ==>', fore='red')
 
-            print UseStyle(path.in_port + '| ' + device_name + ' |' + path.out_port, fore='yellow',
-                           mode='underline') + link_sign,
+            print(UseStyle(path.in_port + '| ' + device_name + ' |' + path.out_port, fore='yellow',
+                           mode='underline') + link_sign, end=' ')
 
         last_path = paths[-1]
         is_last_path_connect_dst = False
@@ -166,8 +166,8 @@ class Trace:
                 is_last_path_connect_dst = True
 
         if not is_last_path_connect_dst:
-            print UseStyle(' X ', fore='red'),
+            print(UseStyle(' X ', fore='red'), end=' ')
 
-        print UseStyle(
+        print(UseStyle(
             '[GATEWAY]' if is_dst_gateway else (dst_host['mac'] + '(' + ','.join(dst_host['ipAddresses']) + ')'),
-            fore='yellow')
+            fore='yellow'))

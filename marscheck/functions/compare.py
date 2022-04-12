@@ -68,7 +68,7 @@ def compare_hosts(before_hosts, after_hosts, device_config_obj):
             del before_host_dict[mac]
         else:
             new_hosts.append(item)
-    return {'added': new_hosts, 'removed': before_host_dict.values(), 'modified': modify_host_str_list}
+    return {'added': new_hosts, 'removed': list(before_host_dict.values()), 'modified': modify_host_str_list}
 
 
 def compare_flows(before_flows, after_flows, device_id_4_compare=None):
@@ -90,7 +90,7 @@ def compare_flows(before_flows, after_flows, device_id_4_compare=None):
                 res[device_id] = {'added': [], 'removed': []}
             res[device_id]['added'].append(item)
 
-    for item in before_flows_dict.values():
+    for item in list(before_flows_dict.values()):
         device_id = item['deviceId']
 
         if device_id_4_compare is not None and device_id_4_compare != device_id:
@@ -123,7 +123,7 @@ def compare_groups(before_groups, after_groups, device_id_4_compare=None):
                 res[device_id] = {'added': [], 'removed': []}
             res[device_id]['added'].append(item)
 
-    for item in before_groups_dict.values():
+    for item in list(before_groups_dict.values()):
         device_id = item['deviceId']
         if device_id_4_compare is not None and device_id_4_compare != device_id:
             continue
@@ -169,7 +169,7 @@ def compare_link(before_links, after_links):
         else:
             res['added'].append(after_links_dict[link_id])
 
-    for item in before_links_dict.values():
+    for item in list(before_links_dict.values()):
         res['removed'].append(item)
 
     return res

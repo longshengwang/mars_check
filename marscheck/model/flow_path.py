@@ -81,7 +81,7 @@ def find_order_path(flow_models, link_manager):
             dst = link_manager.get_dst(out_loc)
             if dst is not None:
                 target_key = dst['device'] + '/' + dst['port']
-                if device_flow_models_dict.has_key(target_key):
+                if target_key in device_flow_models_dict:
                     source_flow_model = device_flow_models_dict.get(target_key)
                     source_loc = target_key
                     paths.append(source_flow_model)
@@ -115,13 +115,13 @@ def get_group_output_port(group):
             if treatment['instructions'] and len(treatment['instructions']) > 0:
                 instructions = treatment['instructions']
                 for instruction in instructions:
-                    if instruction['type'] == 'OUTPUT' and instruction.has_key('port'):
+                    if instruction['type'] == 'OUTPUT' and 'port' in instruction:
                         return instruction.get('port')
 
             if treatment['deferred'] and len(treatment['deferred']) > 0:
                 deferred = treatment['deferred']
                 for defer in deferred:
-                    if defer['type'] == 'OUTPUT' and defer.has_key('port'):
+                    if defer['type'] == 'OUTPUT' and 'port' in defer:
                         return defer.get('port')
     return None
 
@@ -130,7 +130,7 @@ def get_flow_group_id(flow):
     if flow['treatment'] and flow['treatment']['instructions']:
         instructions = flow['treatment']['instructions']
         for item in instructions:
-            keys = item.keys()
+            keys = list(item.keys())
             keys.remove('type')
             value = item[keys[0]]
             if item['type'] == 'GROUP':

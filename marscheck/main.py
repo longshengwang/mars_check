@@ -2,16 +2,15 @@
 import os
 import sys
 
-from lib.command_single_selector import CommandSingleSelector
+from .lib.command_single_selector import CommandSingleSelector
 
-file_path = os.path.abspath(__file__)
-sys.path.insert(0, os.path.dirname(file_path))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import argparse
 import argcomplete as argcomplete
-import cmd_call
+from . import cmd_call
 # import config, snap, pre_check, compare, show_devices, show_links, show_hosts, log
-from constants import DEFAULT_CONFIG_PATH
+from .constants import DEFAULT_CONFIG_PATH
 
 
 class DeviceIdAction(argparse.Action):
@@ -19,7 +18,7 @@ class DeviceIdAction(argparse.Action):
         super(DeviceIdAction, self).__init__(option_strings, dest, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
-        print 'values ', values
+        print('values ', values)
         setattr(namespace, self.dest, values)
 
 

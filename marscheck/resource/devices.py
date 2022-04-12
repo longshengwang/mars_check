@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from constants import DEVICE_NAME
-from resource import Resource
+from .resource import Resource
 
 
 class Devices(Resource):

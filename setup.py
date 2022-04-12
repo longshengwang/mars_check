@@ -12,7 +12,7 @@ setup(
       author_email="macauley.cheng@nocsys.com.cn",
       url="https://github.com/nocsysmars/mars_check",
       license="GNU",
-      python_requires='==2.7.*',
+      python_requires='>=3.*',
       install_requires=['requests','argcomplete'],
       packages=find_packages(),
       scripts=["script/marscheck"],

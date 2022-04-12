@@ -6,10 +6,9 @@ import json
 import os
 import requests
 from requests.auth import HTTPBasicAuth
+import sys
 
-from constants import ETH_TYPE_CODE, DEVICE_CONFIG_NAME, DEVICE_NAME, FLOW_NAME, GROUPS_NAME, \
-    HOSTS_NAME, LINKS_NAME
-
+import constants
 
 def get(url, auth):
     res = requests.get(url, auth=HTTPBasicAuth(auth['user_name'], auth['password']), verify=False)
@@ -48,7 +47,7 @@ def flow_to_line_string(flow, host_object, device_config_object):
                 eth_type_word = ETH_TYPE_CODE.get(item['ethType'])
                 res = res + 'ETH_TYPE:' + eth_type_word + ','
             else:
-                keys = item.keys()
+                keys = list(item.keys())
                 keys.remove('type')
                 res = res + ' ' + item['type'] + ':' + str(item[keys[0]]) + ','
         res = remove_last_word(res)
@@ -58,7 +57,7 @@ def flow_to_line_string(flow, host_object, device_config_object):
         instructions = flow['treatment']['instructions']
         res = res + "ACTION=>"
         for item in instructions:
-            keys = item.keys()
+            keys = list(item.keys())
             keys.remove('type')
             value = item[keys[0]]
             res = res + item['type'] + ':' + value
@@ -75,7 +74,7 @@ def flow_to_line_string(flow, host_object, device_config_object):
         deffers = flow['treatment']['deferred']
         res = res + "ACTION=>"
         for item in deffers:
-            keys = item.keys()
+            keys = list(item.keys())
             keys.remove('type')
             value = item[keys[0]]
 
@@ -113,7 +112,7 @@ def group_to_line_string(group, device_config_object):
                 instructions = treatment['instructions']
                 res = res + 'INSTRUCTION=>{ '
                 for instruction in instructions:
-                    keys = instruction.keys()
+                    keys = list(instruction.keys())
                     keys.remove('type')
                     in_type = instruction['type']
                     value = instruction[keys[0]]
@@ -125,7 +124,7 @@ def group_to_line_string(group, device_config_object):
                 deferred = treatment['deferred']
                 res = res + 'DEFERRED=>{ '
                 for defer in deferred:
-                    keys = defer.keys()
+                    keys = list(defer.keys())
                     keys.remove('type')
                     in_type = defer['type']
                     value = defer[keys[0]]
@@ -263,7 +262,7 @@ def get_all_snap_time(mars_config):
             time_stamp = int(snap_time)
             time_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time_stamp))
             res.append(time_str)
-        except ValueError, e:
+        except ValueError as e:
             pass
     # print int(time.mktime(time.strptime(time_str, '%Y-%m-%d %H:%M:%S'))) == time_stamp
     return res

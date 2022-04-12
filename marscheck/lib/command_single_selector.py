@@ -3,14 +3,14 @@ import sys
 import termios
 import tty
 
-from color import UseStyle
+from .color import UseStyle
 
-left = u'\u001b[1000D'
-right = u'\u001b[1000C'
-clear_line = u'\u001b[2K'
-up = u'\u001b[1A'
-down = u'\u001b[1B'
-clear_to_bottom = u'\u001b[J'
+left = '\u001b[1000D'
+right = '\u001b[1000C'
+clear_line = '\u001b[2K'
+up = '\u001b[1A'
+down = '\u001b[1B'
+clear_to_bottom = '\u001b[J'
 
 
 class CommandSingleSelector:

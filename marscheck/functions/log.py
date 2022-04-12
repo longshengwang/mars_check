@@ -36,7 +36,7 @@ class Log:
         res = resource.get(query_url)
         # res_json = json.loads(res)
         for item in res['logs']:
-            print self._re_color(item)
+            print(self._re_color(item))
 
     def _re_color(self, word):
         item = word.replace('<em>', '\033[' + str(GREEN_NUMBER) + 'm')
@@ -54,5 +54,5 @@ class Log:
             time_word_with_mill = time_word + '.' + utc_time_word[-4:-1]
             item = UseStyle(time_word_with_mill, fore='blue') + item[len(utc_time_word):]
             return item
-        except Exception, e:
+        except Exception as e:
             return word
