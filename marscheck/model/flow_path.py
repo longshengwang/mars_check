@@ -4,7 +4,6 @@ import re
 from lib.color import UseStyle
 from utils import flow_to_line_string
 
-
 def find_path(flows, links, groups, src_host, dst_host):
     src_mac = src_host['mac']
     dst_mac = dst_host['mac']
@@ -17,7 +16,7 @@ def find_path(flows, links, groups, src_host, dst_host):
     parse_flows_output(filter_flow_models, groups)
 
     link_manage = LinkManager(links)
-    paths = find_order_path(filter_flow_models, link_manage)
+    paths = find_order_path(filter_flow_models, link_manage, src_host)
     return paths
     # except Exception, e:
     #     print e.message
@@ -40,7 +39,7 @@ def parse_flows_output(flow_models, groups):
         flow_model.parse_output_port(groups)
 
 
-def find_order_path(flow_models, link_manager):
+def find_order_path(flow_models, link_manager, src_host):
     in_degree = {}
     device_flow_models_dict = {}
 
@@ -54,7 +53,9 @@ def find_order_path(flow_models, link_manager):
         if input_key not in device_flow_models_dict:
             device_flow_models_dict[input_key] = flow_model
         else:
-            raise Exception('Something error with multi flow with same in port at device: ' + input_key)
+            # bcz a device may exist in many paths, ignore the checking
+            pass
+            #raise Exception('Something error with multi flow with same in port at device: ' + input_key)
 
         if input_key not in in_degree:
             in_degree[input_key] = 0
@@ -68,7 +69,11 @@ def find_order_path(flow_models, link_manager):
             else:
                 in_degree[target_key] = in_degree[target_key] + 1
 
-    source_locations = [input_key for input_key in in_degree if in_degree[input_key] == 0]
+    # from the point of view of flow, when host move to other location,
+    # there may be many source locations, need to use src host to decide the real location
+    # source_locations = [input_key for input_key in in_degree if in_degree[input_key] == 0]
+    source_locations = [src_host['locations'][0]['elementId'] + '/' +
+                        src_host['locations'][0]['port']]
 
     if len(source_locations) == 1:
         paths = []
@@ -190,6 +195,13 @@ class FlowModel:
                         port_id = get_group_output_port(group)
                         self.out_port = port_id
                         return True
+
+        if not self.out_port and 'instructions' in self.flow['treatment']:
+            # TODO: how to decide output port if multi output ports exists ?
+            for tra_one in self.flow['treatment']['instructions']:
+                if tra_one['type'] == 'OUTPUT':
+                    self.out_port = tra_one['port']
+                return True
 
         return False
 
